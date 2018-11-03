@@ -8,7 +8,7 @@ public class RobotV1VisionAnalyzer {
 
     private String Gold_Label;
 
-    enum GoldState{
+    public enum GoldState{
         UNKNOWN,
         LEFT,
         CENTER,
@@ -45,6 +45,25 @@ public class RobotV1VisionAnalyzer {
                     } else {
                         return GoldState.CENTER;
                     }
+                }
+
+            } else if (objects.size() == 2){
+                int goldX = -1, silverX = -1;
+
+                for(Recognition rec : objects){
+                    if(rec.getLabel().equals(Gold_Label)){
+                        goldX = (int) rec.getLeft();
+                    } else {
+                        silverX = (int) rec.getLeft();
+                    }
+                }
+
+                if(goldX == -1){
+                    return GoldState.RIGHT;
+                } else if(silverX < goldX){
+                    return GoldState.CENTER;
+                } else {
+                    return GoldState.LEFT;
                 }
 
             }

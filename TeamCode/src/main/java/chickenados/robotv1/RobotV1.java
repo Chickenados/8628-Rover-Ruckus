@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 
@@ -44,20 +45,20 @@ public class RobotV1 implements CknPIDController.PIDInput{
 
     public CknSmartDashboard dashboard;
 
-    //Subsystems
-    public RobotV1Lift lift;
-    public RobotV1Grabber grabber;
-    public RobotV1Dropper dropper;
-
     //Vuforia Variabeles
     private static final String TFOD_MODEL_ASSET = "RoverRuckus.tflite";
     private static final String LABEL_GOLD_MINERAL = "Gold Mineral";
     private static final String LABEL_SILVER_MINERAL = "Silver Mineral";
-
     private boolean useVuforia;
     private boolean useTfod;
     private VuforiaLocalizer vuforia;
-    private TFObjectDetector tfod;
+    public TFObjectDetector tfod;
+
+    //Subsystems
+    public RobotV1Lift lift;
+    public RobotV1Grabber grabber;
+    public RobotV1Dropper dropper;
+    public RobotV1VisionAnalyzer analyzer = new RobotV1VisionAnalyzer(LABEL_GOLD_MINERAL);
 
     public RobotV1(HardwareMap hwMap, Telemetry telemetry){
         this(hwMap, telemetry, false, false);
@@ -184,7 +185,7 @@ public class RobotV1 implements CknPIDController.PIDInput{
             VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
 
             parameters.vuforiaLicenseKey = RobotV1Info.VUFORIA_KEY;
-            parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
+            parameters.cameraName = hwMap.get(WebcamName.class, RobotV1Info.WEBCAME_NAME);
 
             //  Instantiate the Vuforia engine
             vuforia = ClassFactory.getInstance().createVuforia(parameters);

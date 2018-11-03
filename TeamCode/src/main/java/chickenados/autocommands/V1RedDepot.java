@@ -4,8 +4,10 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import chickenados.robotv1.RobotV1;
+import chickenados.robotv1.RobotV1VisionAnalyzer;
 import chickenlib.CknEvent;
 import chickenlib.CknStateMachine;
+import chickenlib.CknUtil;
 
 @Autonomous(name = "V1 Red Depot")
 public class V1RedDepot extends LinearOpMode{
@@ -28,20 +30,35 @@ public class V1RedDepot extends LinearOpMode{
 
     // AUTONOMOUS CONSTANTS
 
+    private final boolean DO_SCAN_MINERALS = true;
+    private final int SCAN_TIMEOUT = 5;
+
+    private final double LEFT_MINERAL_ANGLE = 30;
+    private final double RIGHT_MINERAL_ANGLE = -30;
+
     // END AUTONOMOUS CONSTANTS
 
+    private double angleToMaintain;
+
     CknStateMachine<State> sm = new CknStateMachine<>();
-    CknEvent event = new CknEvent();
+    private CknEvent event = new CknEvent();
 
-    RobotV1 robot;
+    private RobotV1 robot;
 
-    State currentState;
+    private RobotV1VisionAnalyzer.GoldState goldState = RobotV1VisionAnalyzer.GoldState.UNKNOWN;
+
+    private State currentState;
 
     @Override
     public void runOpMode() throws InterruptedException{
-        robot = new RobotV1(hardwareMap, telemetry);
+        robot = new RobotV1(hardwareMap, telemetry, false, true);
 
-        sm.start(State.LOWER_LIFT);
+        if(DO_SCAN_MINERALS){
+            robot.activateVision();
+            sm.start(State.SCAN_MINERALS);
+        } else {
+            sm.start(State.LOWER_LIFT);
+        }
         event.set(true);
 
         waitForStart();
@@ -52,7 +69,6 @@ public class V1RedDepot extends LinearOpMode{
 
             robot.dashboard.setLine(1, "State: " + currentState);
             robot.dashboard.setLine(2, "Event: " + event.isTriggered());
-            robot.yPid.printPIDValues();
 
             if (sm.isReady()) {
 
@@ -62,6 +78,16 @@ public class V1RedDepot extends LinearOpMode{
                     case SCAN_MINERALS:
                         event.reset();
 
+                        double startTime = CknUtil.getCurrentTime();
+
+                        while(goldState == RobotV1VisionAnalyzer.GoldState.UNKNOWN
+                                && CknUtil.getCurrentTime() < startTime + SCAN_TIMEOUT){
+                            goldState = robot.analyzer.analyzeTFOD(robot.tfod.getUpdatedRecognitions());
+                            robot.dashboard.setLine(3, "Gold State: " + goldState);
+                        }
+                        event.set(true);
+
+                        sm.waitForEvent(event, State.LOWER_LIFT);
                         break;
                     case LOWER_LIFT:
                         event.reset();
@@ -75,12 +101,54 @@ public class V1RedDepot extends LinearOpMode{
 
                         robot.grabber.release(event);
 
+                        // If we didn't pick up the gold pos, just drive through the center one.
+                        if(goldState == RobotV1VisionAnalyzer.GoldState.UNKNOWN
+                                || goldState == RobotV1VisionAnalyzer.GoldState.CENTER){
+
+                            sm.waitForEvent(event, State.DRIVE_TO_DEPOT);
+                        } else {
+                            sm.waitForEvent(event, State.TURN_TO_MINERAL);
+                        }
+
+                        break;
+                    case TURN_TO_MINERAL:
+                        event.reset();
+
+                        // Either turn towards left or right mineral.
+                        if(goldState == RobotV1VisionAnalyzer.GoldState.LEFT){
+                            robot.pidDrive.driveDistanceTank(0, LEFT_MINERAL_ANGLE, 4, event);
+                            angleToMaintain = LEFT_MINERAL_ANGLE;
+                        } else {
+                            robot.pidDrive.driveDistanceTank(0, RIGHT_MINERAL_ANGLE, 4, event);
+                            angleToMaintain = RIGHT_MINERAL_ANGLE;
+                        }
+
+                        sm.waitForEvent(event, State.DRIVE_TO_MINERAL);
+                        break;
+                    case DRIVE_TO_MINERAL:
+                        event.reset();
+
+                        robot.pidDrive.driveDistanceTank(-37, angleToMaintain, 4, event);
+
+                        sm.waitForEvent(event, State.TURN_TO_DEPOT);
+                        break;
+                    case TURN_TO_DEPOT:
+                        event.reset();
+
+                        robot.pidDrive.driveDistanceTank(0, -angleToMaintain, 4, event);
+
                         sm.waitForEvent(event, State.DRIVE_TO_DEPOT);
                         break;
                     case DRIVE_TO_DEPOT:
                         event.reset();
 
-                        robot.pidDrive.driveDistanceTank(-75, 0, 4, event);
+                        if(goldState == RobotV1VisionAnalyzer.GoldState.UNKNOWN
+                                || goldState == RobotV1VisionAnalyzer.GoldState.CENTER) {
+                            robot.pidDrive.driveDistanceTank(-75, 0, 4, event);
+                        } else {
+                            angleToMaintain = robot.locationTracker.getHeading();
+                            robot.pidDrive.driveDistanceTank(-37, angleToMaintain, 4, event);
+                        }
 
                         sm.waitForEvent(event, State.TURN_TO_DROP);
                         break;
