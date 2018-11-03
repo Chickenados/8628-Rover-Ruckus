@@ -18,12 +18,13 @@ public class V1RedCrater extends LinearOpMode{
         DRIVE_TO_MINERAL,
         HIT_MINERAL,
         DRIVE_TO_WALL,
-        /*DRIVE_TO_DEPOT,
+        TURN_TO_DEPOT,
+        DRIVE_TO_DEPOT,
         TURN_TO_DROP,
         DROP_MARKER,
         RESET_SERVO,
         LINE_UP_FOR_CRATER,
-        DRIVE_TO_CRATER,*/
+        DRIVE_TO_CRATER,
         END;
     }
 
@@ -88,7 +89,7 @@ public class V1RedCrater extends LinearOpMode{
                     case DRIVE_TO_MINERAL:
                         event.reset();
 
-                        robot.pidDrive.driveDistanceTank(-30,30,4,event);
+                        robot.pidDrive.driveDistanceTank(-33,30,4,event);
 
                         sm.waitForEvent(event, State.HIT_MINERAL);
                         break;
@@ -102,21 +103,28 @@ public class V1RedCrater extends LinearOpMode{
                     case DRIVE_TO_WALL:
                         event.reset();
 
-                        robot.pidDrive.driveDistanceTank(20,90, 3,event);
+                        robot.pidDrive.driveDistanceTank(-30,90, 3,event);
 
-                        sm.waitForEvent(event, State.END);
+                        sm.waitForEvent(event, State.TURN_TO_DEPOT);
                         break;
-                    /*case DRIVE_TO_DEPOT:
+                    case TURN_TO_DEPOT:
                         event.reset();
 
-                        robot.pidDrive.driveDistanceTank(-90, 135, 4, event);
+                        robot.pidDrive.driveDistanceTank(0, 135, 4, event);
+
+                        sm.waitForEvent(event, State.DRIVE_TO_DEPOT);
+                        break;
+                    case DRIVE_TO_DEPOT:
+                        event.reset();
+
+                        robot.pidDrive.driveDistanceTank(-75, 135, 4, event);
 
                         sm.waitForEvent(event, State.TURN_TO_DROP);
                         break;
                     case TURN_TO_DROP:
                         event.reset();
 
-                        robot.pidDrive.driveDistanceTank(0, -90, 4, event);
+                        robot.pidDrive.driveDistanceTank(0, 160, 4, event);
 
                         sm.waitForEvent(event, State.DROP_MARKER);
                         break;
@@ -147,7 +155,7 @@ public class V1RedCrater extends LinearOpMode{
                         robot.pidDrive.driveDistanceTank(90, 135, 5, event);
 
                         sm.waitForEvent(event, State.END);
-                        break;*/
+                        break;
                     case END:
                         event.reset();
                         sm.stop();
