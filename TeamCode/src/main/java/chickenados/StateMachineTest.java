@@ -1,5 +1,6 @@
 package chickenados;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -16,6 +17,7 @@ import chickenlib.CknStopwatch;
  * In this class, the state machine progresses through 3 different 'states' every 3 seconds.
  */
 @TeleOp(name = "State Machine Test")
+@Disabled
 public class StateMachineTest extends LinearOpMode{
 
     enum State{

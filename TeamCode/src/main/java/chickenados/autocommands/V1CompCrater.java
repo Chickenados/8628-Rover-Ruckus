@@ -32,7 +32,7 @@ public class V1CompCrater extends LinearOpMode{
 
     // END AUTONOMOUS CONSTANTS
 
-    private double angleToMaintain;
+    private double angleToMaintain = 0;
 
     private RobotV1VisionAnalyzer.GoldState goldState = RobotV1VisionAnalyzer.GoldState.UNKNOWN;
 
@@ -82,6 +82,7 @@ public class V1CompCrater extends LinearOpMode{
                             robot.dashboard.setLine(3, "Gold State: " + goldState);
                         }
                         event.set(true);
+                        robot.shutdownVision();
 
                         sm.waitForEvent(event, State.LOWER_LIFT);
                         break;
@@ -97,18 +98,19 @@ public class V1CompCrater extends LinearOpMode{
 
                         robot.grabber.release(event);
 
-                        sm.waitForEvent(event, State.DRIVE_TO_MINERAL);
+                        sm.waitForEvent(event, State.DRIVE_FROM_GRABBER);
                         break;
                     case DRIVE_FROM_GRABBER:
                         event.reset();
 
                         robot.pidDrive.driveDistanceTank(-5, 0, 3, event);
 
-                        if(goldState != RobotV1VisionAnalyzer.GoldState.UNKNOWN
-                                && goldState != RobotV1VisionAnalyzer.GoldState.CENTER) {
-                            sm.waitForEvent(event, State.TURN_TO_MINERAL);
-                        } else {
+                        if(goldState == RobotV1VisionAnalyzer.GoldState.UNKNOWN
+                                || goldState == RobotV1VisionAnalyzer.GoldState.CENTER) {
+                            angleToMaintain = 0;
                             sm.waitForEvent(event, State.DRIVE_TO_MINERAL);
+                        } else {
+                            sm.waitForEvent(event, State.TURN_TO_MINERAL);
                         }
 
                         break;
@@ -129,7 +131,7 @@ public class V1CompCrater extends LinearOpMode{
                     case DRIVE_TO_MINERAL:
                         event.reset();
 
-                        robot.pidDrive.driveDistanceTank(-33,30,4,event);
+                        robot.pidDrive.driveDistanceTank(-50,angleToMaintain,4, event);
 
                         sm.waitForEvent(event, State.END);
                         break;

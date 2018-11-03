@@ -30,7 +30,7 @@ public class RobotV1Info {
 
     //kU value (steady oscillation)
     // public static final double TURN_PID_P = 0.2;
-    public static final double TURN_PID_P = 0.08;
+    public static final double TURN_PID_P = 0.04;
     public static final double TURN_PID_I = 0.0;
     public static final double TURN_PID_D = 0.0;
 

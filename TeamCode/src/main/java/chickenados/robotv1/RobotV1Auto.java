@@ -1,11 +1,13 @@
 package chickenados.robotv1;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import chickenlib.CknSmartDashboard;
 
 @Autonomous(name = "RobotV1 Full Auto")
+@Disabled
 public class RobotV1Auto extends LinearOpMode{
 
     enum Auto{

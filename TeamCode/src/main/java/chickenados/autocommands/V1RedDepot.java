@@ -124,10 +124,10 @@ public class V1RedDepot extends LinearOpMode{
 
                         // Either turn towards left or right mineral.
                         if(goldState == RobotV1VisionAnalyzer.GoldState.LEFT){
-                            robot.pidDrive.driveDistanceTank(0, LEFT_MINERAL_ANGLE, 4, event);
+                            robot.pidDrive.driveDistanceTank(0, LEFT_MINERAL_ANGLE, 2.5, event);
                             angleToMaintain = LEFT_MINERAL_ANGLE;
                         } else {
-                            robot.pidDrive.driveDistanceTank(0, RIGHT_MINERAL_ANGLE, 4, event);
+                            robot.pidDrive.driveDistanceTank(0, RIGHT_MINERAL_ANGLE, 2.5, event);
                             angleToMaintain = RIGHT_MINERAL_ANGLE;
                         }
 
@@ -146,7 +146,7 @@ public class V1RedDepot extends LinearOpMode{
                         if(goldState == RobotV1VisionAnalyzer.GoldState.LEFT) angleToMaintain = -20;
                         if(goldState == RobotV1VisionAnalyzer.GoldState.RIGHT) angleToMaintain *= -1;
 
-                        robot.pidDrive.driveDistanceTank(0, angleToMaintain, 4, event);
+                        robot.pidDrive.driveDistanceTank(0, angleToMaintain, 2.5, event);
 
                         sm.waitForEvent(event, State.DRIVE_TO_DEPOT);
                         break;
@@ -170,7 +170,7 @@ public class V1RedDepot extends LinearOpMode{
                     case TURN_TO_DROP:
                         event.reset();
 
-                        robot.pidDrive.driveDistanceTank(0, 90, 4, event);
+                        robot.pidDrive.driveDistanceTank(0, 90, 2.5, event);
 
                         sm.waitForEvent(event, State.DROP_MARKER);
                         break;
@@ -196,14 +196,14 @@ public class V1RedDepot extends LinearOpMode{
                     case LINE_UP_FOR_CRATER:
                         event.reset();
 
-                        robot.pidDrive.driveDistanceTank(0, 50, 4, event);
+                        robot.pidDrive.driveDistanceTank(0, 50, 2.5, event);
 
                         sm.waitForEvent(event, State.DRIVE_TO_CRATER);
                         break;
                     case DRIVE_TO_CRATER:
                         event.reset();
 
-                        robot.pidDrive.driveDistanceTank(90, 48, 5, event);
+                        robot.pidDrive.driveDistanceTank(90, 48, 2.5,event);
 
                         sm.waitForEvent(event, State.END);
                         break;

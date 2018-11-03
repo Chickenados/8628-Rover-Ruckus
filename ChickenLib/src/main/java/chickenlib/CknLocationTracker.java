@@ -26,11 +26,12 @@ public class CknLocationTracker {
     private double heading = 0.0;
 
     //Drive base is for accessing motor encoders.
-    CknDriveBase driveBase;
+    private CknDriveBase driveBase;
 
     public CknLocationTracker(CknDriveBase driveBase){
         this.driveBase = driveBase;
         if(driveBase != null) useEncoders = true;
+        //TODO: Proper variable setting
     }
 
     public void resetLocation(){
@@ -101,6 +102,8 @@ public class CknLocationTracker {
                 {
                     throw new IllegalArgumentException("Location Tracking doesn't support current drive train.");
                 }
+            } else {
+                //TODO: Holonomic Location Tracking
             }
         }
         if(useGyro){

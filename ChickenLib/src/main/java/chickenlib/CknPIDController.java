@@ -7,6 +7,9 @@ public class CknPIDController {
     private double dTerm;
     private double fTerm;
 
+    private double deltaTime;
+    private double deltaError;
+
     //TODO: Add input/output caps, include checks for those caps in I term, finish reset method,
     //TODO: add more options to make a more versatile PID control.
 
@@ -63,6 +66,7 @@ public class CknPIDController {
     private double setPoint;
 
     double prevTime = 0.0;
+    double prevError;
     double totalError = 0.0;
 
     boolean isRelative;
@@ -108,6 +112,16 @@ public class CknPIDController {
         this.pidCoef = pidCoef;
     }
 
+    /**
+     * Returns the current coefficients on the PID.
+     * @return Coefficients.
+     */
+    public PIDCoefficients getCoefficients() { return pidCoef; }
+
+    /**
+     * Returns the current error of the PID
+     * @return Current Error
+     */
     public double getError(){
         return currError;
     }
@@ -169,19 +183,21 @@ public class CknPIDController {
         CknSmartDashboard.getInstance().setLine(14, "D*: " + dTerm * pidCoef.kD);
         CknSmartDashboard.getInstance().setLine(15, "Total: " + ((pTerm * pidCoef.kP) + (iTerm * pidCoef.kI)
          + (dTerm * pidCoef.kD)));
+        CknSmartDashboard.getInstance().setLine(16, "CurrError: " + currError);
+        CknSmartDashboard.getInstance().setLine(17, "DeltaError: " + deltaError);
+        CknSmartDashboard.getInstance().setLine(18, "PrevError: " + prevError);
     }
 
     public double getOutput(){
 
-        double input = pidInput.getInput(this);
-        //CknSmartDashboard.getInstance().setLine(3, "PIDInput: " + input);
-
         // Variables used to calculated P, I, D
-        currError = setPoint - input;
-        double prevError = currError;
+
         double currTime = CknUtil.getCurrentTime();
-        double deltaTime = currTime - prevTime;
-        prevTime = currTime;
+        deltaTime = currTime - prevTime;
+
+        double input = pidInput.getInput(this);
+        currError = setPoint - input;
+        deltaError = currError - prevError;
 
         if(pidCoef.kI != 0.0) {
             double gain = (totalError + (currError * deltaTime)) * pidCoef.kI;
@@ -198,7 +214,11 @@ public class CknPIDController {
         // Calcluating P, I, D, terms
         pTerm = currError;
         iTerm = totalError;
-        dTerm = deltaTime >0.0? (prevError - currError) / deltaTime: 0.0;
+        if(deltaTime <= 0.0){
+            dTerm = 0.0;
+        } else {
+            dTerm = deltaError / deltaTime;
+        }
         fTerm = setPoint;
 
         // Multiply terms by their constants and return.
@@ -211,6 +231,10 @@ public class CknPIDController {
         if(output < minOutput){
             output = minOutput;
         }
+
+        // Save current values to be used in next loop.
+        prevError = currError;
+        prevTime = currTime;
 
         return output;
 

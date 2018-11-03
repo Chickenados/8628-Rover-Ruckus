@@ -1,5 +1,8 @@
 package chickenlib;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
 public class CknUtil {
 
     /**
@@ -8,5 +11,13 @@ public class CknUtil {
      */
     public static double getCurrentTime(){
         return System.nanoTime()/1000000000.0; // Billionth of a second
+    }
+
+    public static double round(double value, int places){
+        if(places < 0) throw new IllegalArgumentException("Attempted to round to illegal decimal places!");
+
+        BigDecimal bd = new BigDecimal(Double.toString(value));
+        bd = bd.setScale(places, RoundingMode.HALF_UP);
+        return bd.doubleValue();
     }
 }

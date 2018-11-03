@@ -126,7 +126,7 @@ public class RobotV1 implements CknPIDController.PIDInput{
         //
         // Initialize SmartDashboard system
         //
-        dashboard = CknSmartDashboard.createInstance(telemetry);
+        dashboard = CknSmartDashboard.createInstance(telemetry, 32);
 
         //
         // PID Drive systems
@@ -248,13 +248,18 @@ public class RobotV1 implements CknPIDController.PIDInput{
     // Looped Methods
     //
 
-    // Call at the beginning of the TeleOp while loop
+    // Call at the beginning of the while loop
     public void preContinuous(){
         locationTracker.trackLocation();
         locationTracker.setHeading(imu.getAngularOrientation().firstAngle);
-        pidDrive.handlePIDs();
         lift.handlePids();
         dropper.handleDropper();
+        pidDrive.handlePIDs();
+    }
+
+    // Call at the end of the while loop
+    public void postContinuous(){
+
     }
 
 }

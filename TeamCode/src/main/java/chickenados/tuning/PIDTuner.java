@@ -8,14 +8,24 @@ import chickenados.robotv1.RobotV1Info;
 import chickenlib.CknEvent;
 import chickenlib.CknPIDController;
 import chickenlib.CknStateMachine;
+import chickenlib.CknUtil;
 
 @TeleOp(name = "PID Tuner")
 public class PIDTuner extends LinearOpMode {
+
+    enum PIDType{
+        TURN,
+        DRIVE;
+    }
+
+    private static final int ROUND_PLACES = 6;
 
     RobotV1 robot;
     CknStateMachine<State> sm = new CknStateMachine<>();
     CknEvent event = new CknEvent();
     State currState;
+
+    PIDType currentPid = PIDType.DRIVE;
 
     double kP = RobotV1Info.Y_ENCODER_PID_P;
     double kI = RobotV1Info.Y_ENCODER_PID_I;
@@ -25,7 +35,9 @@ public class PIDTuner extends LinearOpMode {
     boolean downReleased = true;
     boolean leftReleased = true;
     boolean rightReleased = true;
+    boolean leftBumperReleased = true;
     boolean xReleased = true;
+    boolean yReleased = true;
     boolean aReleased = true;
 
     // 1 = P, 2 = I, 3 = D
@@ -34,6 +46,7 @@ public class PIDTuner extends LinearOpMode {
 
     enum State {
         DRIVE_FORWARD,
+        TANK,
         IDLE;
     }
 
@@ -49,19 +62,30 @@ public class PIDTuner extends LinearOpMode {
         while(opModeIsActive()){
 
             robot.preContinuous();
-            robot.yPid.printPIDValues();
+
+            if(currentPid == PIDType.TURN){
+                robot.turnPid.printPIDValues();
+            } else if(currentPid == PIDType.DRIVE){
+                robot.yPid.printPIDValues();
+            }
+
+            if(gamepad1.right_bumper && currState == State.DRIVE_FORWARD) event.set(true);
+
+            robot.dashboard.setLine(0, "State: " + currState);
 
             if(sm.isReady()){
 
                 currState = sm.getState();
-                robot.dashboard.setLine(0, "State: " + currState);
 
                 switch(currState){
                     case DRIVE_FORWARD:
                         event.reset();
 
-                        //robot.cknPIDDrive.driveStraightTank(12, 0, 10, event);
-                        robot.pidDrive.driveDistanceTank(12, 0, 1000, event);
+                        if(currentPid == PIDType.DRIVE) {
+                            robot.pidDrive.driveDistanceTank(12, 0, 1000, event);
+                        } else if(currentPid == PIDType.TURN){
+                            robot.pidDrive.driveDistanceTank(0, 90, 1000, event);
+                        }
 
                         sm.waitForEvent(event, State.IDLE);
 
@@ -79,7 +103,11 @@ public class PIDTuner extends LinearOpMode {
 
                 // B button applys changes to PID.
                 if(gamepad1.b){
-                    robot.yPid.setCoefficients(new CknPIDController.PIDCoefficients(kP, kI, kD));
+                    if(currentPid == PIDType.TURN){
+                        robot.turnPid.setCoefficients(new CknPIDController.PIDCoefficients(kP, kI, kD));
+                    } else if(currentPid == PIDType.DRIVE){
+                        robot.yPid.setCoefficients(new CknPIDController.PIDCoefficients(kP, kI, kD));
+                    }
                 }
 
                 //A button switches to DRIVE_FORWARD, performing action
@@ -103,16 +131,39 @@ public class PIDTuner extends LinearOpMode {
                     xReleased = true;
                 }
 
+                if(gamepad1.y && yReleased){
+                    yReleased = false;
+                    if(currentPid == PIDType.TURN){
+                        currentPid = PIDType.DRIVE;
+                        CknPIDController.PIDCoefficients coefs = robot.yPid.getCoefficients();
+                        kP = coefs.kP;
+                        kI = coefs.kI;
+                        kD = coefs.kD;
+                    } else {
+                        currentPid = PIDType.TURN;
+                        CknPIDController.PIDCoefficients coefs = robot.turnPid.getCoefficients();
+                        kP = coefs.kP;
+                        kI = coefs.kI;
+                        kD = coefs.kD;
+                    }
+                }
+                if(!gamepad1.y && !yReleased){
+                    yReleased = true;
+                }
+
                 //Dpad Up increments selected coefficient.
                 if(gamepad1.dpad_up && upReleased){
                     upReleased = false;
                     if(selectedCoeff == 1){
                         kP += incrementScale;
+                        kP = CknUtil.round(kP, ROUND_PLACES);
                     }
                     else if(selectedCoeff == 2){
                         kI += incrementScale;
+                        kI = CknUtil.round(kI, ROUND_PLACES);
                     } else {
                         kD += incrementScale;
+                        kD = CknUtil.round(kD, ROUND_PLACES);
                     }
                 }
                 if(!gamepad1.dpad_up && !upReleased){
@@ -124,11 +175,14 @@ public class PIDTuner extends LinearOpMode {
                     downReleased = false;
                     if(selectedCoeff == 1){
                         kP -= incrementScale;
+                        kP = CknUtil.round(kP, ROUND_PLACES);
                     }
                     else if(selectedCoeff == 2){
                         kI -= incrementScale;
+                        kI = CknUtil.round(kI, ROUND_PLACES);
                     } else {
                         kD -= incrementScale;
+                        kD = CknUtil.round(kD, ROUND_PLACES);
                     }
                 }
                 if(!gamepad1.dpad_down && !downReleased){
@@ -138,7 +192,8 @@ public class PIDTuner extends LinearOpMode {
                 //Dpad right increments scale.
                 if(gamepad1.dpad_right && rightReleased){
                     rightReleased = false;
-                    incrementScale = incrementScale * 10;
+                    incrementScale = incrementScale / 10;
+                    incrementScale = CknUtil.round(incrementScale, ROUND_PLACES);
                 }
                 if(!gamepad1.dpad_right && !rightReleased){
                     rightReleased = true;
@@ -147,9 +202,18 @@ public class PIDTuner extends LinearOpMode {
                 //Dpad left decrements scale.
                 if(gamepad1.dpad_left && leftReleased){
                     leftReleased = false;
-                    incrementScale = incrementScale / 10;
+                    incrementScale = incrementScale * 10;
+                    incrementScale = CknUtil.round(incrementScale, ROUND_PLACES);
                 }
                 if(!gamepad1.dpad_left && !leftReleased){
+                    leftReleased = true;
+                }
+
+                if(gamepad1.left_bumper && leftReleased){
+                    leftReleased = false;
+                    currState = State.TANK;
+                }
+                if(!gamepad1.left_bumper && !leftReleased){
                     leftReleased = true;
                 }
 
@@ -165,12 +229,23 @@ public class PIDTuner extends LinearOpMode {
                     robot.dashboard.setLine(1, "Coeff: D");
                 }
 
-                robot.dashboard.setLine(2, "Change Scale: " + incrementScale);
-                robot.dashboard.setLine(3, "P: " + kP);
-                robot.dashboard.setLine(4, "I: " + kI);
-                robot.dashboard.setLine(5, "D: " + kD);
+                robot.dashboard.setLine(2, "PID To edit: " + currentPid);
+                robot.dashboard.setLine(3, "Change Scale: " + incrementScale);
+                robot.dashboard.setLine(4, "P: " + kP);
+                robot.dashboard.setLine(5, "I: " + kI);
+                robot.dashboard.setLine(6, "D: " + kD);
 
+            } else if(currState == State.TANK){
 
+                robot.driveBase.tankDrive(gamepad1.left_stick_y, gamepad1.right_stick_y);
+
+                if(gamepad1.left_bumper && leftReleased){
+                    leftReleased = false;
+                    currState = State.IDLE;
+                }
+                if(!gamepad1.left_bumper && !leftReleased){
+                    leftReleased = true;
+                }
 
             }
 
