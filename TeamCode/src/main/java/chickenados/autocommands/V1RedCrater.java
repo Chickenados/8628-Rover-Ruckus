@@ -1,6 +1,7 @@
 package chickenados.autocommands;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import chickenados.robotv1.RobotV1;
@@ -8,6 +9,7 @@ import chickenlib.CknEvent;
 import chickenlib.CknStateMachine;
 
 @Autonomous(name = "V1 Red Crater")
+@Disabled
 public class V1RedCrater extends LinearOpMode{
 
     enum State{

@@ -16,6 +16,7 @@ public class V1RedDepot extends LinearOpMode{
         SCAN_MINERALS,
         LOWER_LIFT,
         RELEASE_GRABBER,
+        MOVE_FROM_HOOK,
         TURN_TO_MINERAL,
         DRIVE_TO_MINERAL,
         TURN_TO_DEPOT,
@@ -107,9 +108,16 @@ public class V1RedDepot extends LinearOpMode{
 
                             sm.waitForEvent(event, State.DRIVE_TO_DEPOT);
                         } else {
-                            sm.waitForEvent(event, State.TURN_TO_MINERAL);
+                            sm.waitForEvent(event, State.MOVE_FROM_HOOK);
                         }
 
+                        break;
+                    case MOVE_FROM_HOOK:
+                        event.reset();
+
+                        robot.pidDrive.driveDistanceTank(-5, 0, 2, event);
+
+                        sm.waitForEvent(event, State.TURN_TO_MINERAL);
                         break;
                     case TURN_TO_MINERAL:
                         event.reset();
@@ -128,14 +136,17 @@ public class V1RedDepot extends LinearOpMode{
                     case DRIVE_TO_MINERAL:
                         event.reset();
 
-                        robot.pidDrive.driveDistanceTank(-37, angleToMaintain, 4, event);
+                        robot.pidDrive.driveDistanceTank(-47, angleToMaintain, 4, event);
 
                         sm.waitForEvent(event, State.TURN_TO_DEPOT);
                         break;
                     case TURN_TO_DEPOT:
                         event.reset();
 
-                        robot.pidDrive.driveDistanceTank(0, -angleToMaintain, 4, event);
+                        if(goldState == RobotV1VisionAnalyzer.GoldState.LEFT) angleToMaintain = -20;
+                        if(goldState == RobotV1VisionAnalyzer.GoldState.RIGHT) angleToMaintain *= -1;
+
+                        robot.pidDrive.driveDistanceTank(0, angleToMaintain, 4, event);
 
                         sm.waitForEvent(event, State.DRIVE_TO_DEPOT);
                         break;
@@ -147,7 +158,11 @@ public class V1RedDepot extends LinearOpMode{
                             robot.pidDrive.driveDistanceTank(-75, 0, 4, event);
                         } else {
                             angleToMaintain = robot.locationTracker.getHeading();
-                            robot.pidDrive.driveDistanceTank(-37, angleToMaintain, 4, event);
+                            if(goldState == RobotV1VisionAnalyzer.GoldState.LEFT){
+                                robot.pidDrive.driveDistanceTank(-40, angleToMaintain, 4, event);
+                            } else {
+                                robot.pidDrive.driveDistanceTank(-37, angleToMaintain, 4, event);
+                            }
                         }
 
                         sm.waitForEvent(event, State.TURN_TO_DROP);
@@ -171,7 +186,12 @@ public class V1RedDepot extends LinearOpMode{
 
                         robot.dropper.reset(event);
 
-                        sm.waitForEvent(event, State.LINE_UP_FOR_CRATER);
+                        // End the program if it detected left since the robot hits the mineral.
+                        if(goldState != RobotV1VisionAnalyzer.GoldState.LEFT){
+                            sm.waitForEvent(event, State.LINE_UP_FOR_CRATER);
+                        } else {
+                            sm.waitForEvent(event, State.END);
+                        }
                         break;
                     case LINE_UP_FOR_CRATER:
                         event.reset();
