@@ -76,7 +76,7 @@ public class V1RedCrater extends LinearOpMode{
 
                         robot.grabber.release(event);
 
-                        sm.waitForEvent(event, State.TURN_TO_MINERAL);
+                        sm.waitForEvent(event, State.DRIVE_TO_MINERAL);
                         break;
                     case TURN_TO_MINERAL:
                         event.reset();

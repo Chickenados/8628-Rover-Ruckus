@@ -80,7 +80,7 @@ public class V1RedDepot extends LinearOpMode{
                     case DRIVE_TO_DEPOT:
                         event.reset();
 
-                        robot.pidDrive.driveDistanceTank(-72, 0, 4, event);
+                        robot.pidDrive.driveDistanceTank(-75, 0, 4, event);
 
                         sm.waitForEvent(event, State.TURN_TO_DROP);
                         break;
@@ -108,7 +108,7 @@ public class V1RedDepot extends LinearOpMode{
                     case LINE_UP_FOR_CRATER:
                         event.reset();
 
-                        robot.pidDrive.driveDistanceTank(0, 48, 4, event);
+                        robot.pidDrive.driveDistanceTank(0, 50, 4, event);
 
                         sm.waitForEvent(event, State.DRIVE_TO_CRATER);
                         break;
