@@ -22,6 +22,11 @@ import chickenlib.CknSmartDashboard;
 
 public class RobotV1 implements CknPIDController.PIDInput{
 
+    public enum TaskType{
+        PRECONTINUOUS,
+        POSTCONTINUOUS;
+    }
+
     HardwareMap hwMap;
 
     public CknDriveBase driveBase;

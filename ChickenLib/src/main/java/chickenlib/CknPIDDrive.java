@@ -92,7 +92,7 @@ public class CknPIDDrive {
 
 
     //Call this method every loop possible
-
+    // Call this in precontinuous
     public void handlePIDs(){
         if(isActive){
 
