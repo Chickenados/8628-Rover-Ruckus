@@ -110,6 +110,9 @@ public class ChickenTeleOp extends LinearOpMode {
                 robot.collector.stop();
             }
 
+            robot.pivotMotor.setPower(gamepad1.left_stick_x);
+            robot.reachMotor.setPower(gamepad1.right_stick_y);
+
             // Right Dpad makes the robot into Tank drive mode.
             // Left DPad makes the robot go into Arcade drive mode.
             if(gamepad2.dpad_right)

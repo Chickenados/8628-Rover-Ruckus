@@ -41,6 +41,9 @@ public class RobotV1 implements CknPIDController.PIDInput{
     DcMotor rearRight;
 
     public DcMotor liftMotor;
+    public DcMotor pivotMotor;
+    public DcMotor reachMotor;
+
 
     Servo dropperServo;
     CRServo collectorServo;
@@ -203,6 +206,12 @@ public class RobotV1 implements CknPIDController.PIDInput{
         //
         collectorServo = hwMap.get(CRServo.class, RobotV1Info.COLLECTOR_NAME);
         collector = new RobotV1Collector(collectorServo);
+
+        //
+        // Ball Scorer Subsystem
+        //
+        pivotMotor = hwMap.dcMotor.get(RobotV1Info.PIVOT_MOTOR_NAME);
+        reachMotor = hwMap.dcMotor.get(RobotV1Info.REACH_MOTOR_NAME);
     }
 
     private void initVuforia(){

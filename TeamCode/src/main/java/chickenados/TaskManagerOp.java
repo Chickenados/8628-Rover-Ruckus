@@ -19,9 +19,6 @@ public class TaskManagerOp extends LinearOpMode{
 
         dash = CknSmartDashboard.createInstance(telemetry);
 
-        ExampleTask task = new ExampleTask(dash);
-        task.enableTask();
-
         waitForStart();
 
         while(opModeIsActive()){

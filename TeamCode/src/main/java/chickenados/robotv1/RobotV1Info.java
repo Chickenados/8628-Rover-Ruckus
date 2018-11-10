@@ -65,6 +65,13 @@ public class RobotV1Info {
     public static final int DROP_POSITION = 70;
     public static final int DROP_RESET_POSITION = 0;
 
+    //
+    // Ball Scorer Subsystem
+    //
+
+    public static final String REACH_MOTOR_NAME = "reacher";
+    public static final String PIVOT_MOTOR_NAME = "pivot";
+
     // Webcam
     public static final String WEBCAME_NAME = "Webcam";
     public static final String VUFORIA_KEY = "AV2hPmr/////AAABmQLD9hUunkK4tSZiwFAlrpZPoN76Ej8hCf1AdzRK5+dWdO6VF0iKY/cqgZLxkQ4RCD0KXMvXtiUx87IkUWaghhJYq446Zx2MDU12MXtsE9hq8p3alcdmCCvCun+veOD/mwKlEXDnZYl8jMzxcCOpEqr3Uc2MzsjpFbrdr+m5tYXmNAKQrN9Bq4VALSSl/pUhk1/swPiJenMa938xu0pN4C+xuOCyAmNX44yln0q8GnoGmtmdMCg3NTOiEDm6K/fFTLI1nWN2LOWzVQZ88Ul0EIjgdTfA+DYgz5O8AS/leZcUn7WTbPbhy/5NaqorhI+6u1YMYYFaPq41j3lenoUU+6DdfK133dZ8+M57EvFVXJSv";
