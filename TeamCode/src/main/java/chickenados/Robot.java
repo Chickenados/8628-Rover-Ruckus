@@ -38,9 +38,9 @@ public class Robot implements CknPIDController.PIDInput{
         //frontRight = hwMap.dcMotor.get(RobotInfo.FRONT_RIGHT_NAME);
         rearLeft = hwMap.dcMotor.get(RobotInfo.REAR_LEFT_NAME);
         rearRight = hwMap.dcMotor.get(RobotInfo.REAR_RIGHT_NAME);
-        driveBase = new CknDriveBase(rearLeft, rearRight);
-        locationTracker = new CknLocationTracker(driveBase);
-        locationTracker.resetLocation();
+       // driveBase = new CknDriveBase(rearLeft, rearRight);
+        //locationTracker = new CknLocationTracker(driveBase);
+        //locationTracker.resetLocation();
 
 
         //
@@ -85,8 +85,7 @@ public class Robot implements CknPIDController.PIDInput{
 
     // Call at the beginnnig of the TeleOp while loop
     public void preContinuous(){
-        locationTracker.trackLocation();
-        cknPIDDrive.handlePIDs();
+
     }
 
 

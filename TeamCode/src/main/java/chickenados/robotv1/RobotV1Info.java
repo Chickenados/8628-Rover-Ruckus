@@ -52,6 +52,12 @@ public class RobotV1Info {
     public static final double LIFT_PID_D = 0.0;
 
     //
+    // Collector Subsystem Constants
+    //
+
+    public static final String COLLECTOR_NAME = "collector";
+
+    //
     // Dropper Subsystem Constants
     //
 

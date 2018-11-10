@@ -73,7 +73,6 @@ public class RobotV1Auto extends LinearOpMode{
         waitForStart();
 
         while(opModeIsActive()){
-            robot.preContinuous();
 
             switch (currentAuto){
                 case RED_DEPOT:

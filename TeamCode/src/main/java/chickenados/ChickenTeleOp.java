@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import chickenados.robotv1.RobotV1;
 import chickenados.robotv1.RobotV1Info;
 import chickenlib.CknDriveBase;
+import chickenlib.CknTaskManager;
 
 import static chickenados.robotv1.RobotV1Info.LIFT_DOWN_SPEED;
 import static chickenados.robotv1.RobotV1Info.LIFT_NULL_SPEED;
@@ -29,6 +30,7 @@ public class ChickenTeleOp extends LinearOpMode {
 
     double speed = 1.0;
 
+    CknTaskManager mgr = new CknTaskManager();
 
 
 
@@ -48,7 +50,7 @@ public class ChickenTeleOp extends LinearOpMode {
 
 
         while (opModeIsActive()) {
-            robot.preContinuous();
+            mgr.executeTasks(CknTaskManager.TaskType.PRECONTINUOUS);
 
             robot.driveBase.drive(gamepad2.right_stick_x, gamepad2.right_stick_y,
                     gamepad2.left_stick_x, gamepad2.left_stick_y);
@@ -100,6 +102,14 @@ public class ChickenTeleOp extends LinearOpMode {
                 robot.driveBase.setSpeed(RobotV1Info.FULL_SPEED);
             }
 
+            if(gamepad1.right_bumper){
+                robot.collector.collect();
+            } else if(gamepad1.left_bumper){
+                robot.collector.eject();
+            } else {
+                robot.collector.stop();
+            }
+
             // Right Dpad makes the robot into Tank drive mode.
             // Left DPad makes the robot go into Arcade drive mode.
             if(gamepad2.dpad_right)
@@ -111,7 +121,7 @@ public class ChickenTeleOp extends LinearOpMode {
             robot.dashboard.setLine(1, "Drive Mode: " + robot.driveBase.getMode());
             robot.dashboard.setLine(2, "Speed: " + robot.driveBase.getSpeed());
 
-
+            mgr.executeTasks(CknTaskManager.TaskType.POSTCONTINUOUS);
         }
     }
 }

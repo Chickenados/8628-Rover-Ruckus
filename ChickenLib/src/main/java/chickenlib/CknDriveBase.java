@@ -3,7 +3,18 @@ package chickenlib;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
+import java.util.ArrayList;
+
 public class CknDriveBase {
+
+    public static class Parameters {
+
+        public ArrayList<DriveType> driveTypes;
+
+        public int ticksPerRev = 1440;
+        public double gearRatio = 3.0;
+        public double wheelDiameter = 1.0;
+    }
 
     public enum MotorType{
         FRONT_LEFT(0),
@@ -24,7 +35,9 @@ public class CknDriveBase {
         MECANUM;
     }
 
+    private Parameters params;
     DriveType mode = DriveType.TANK;
+    private boolean reversed;
 
     private int numMotors = 0;
 
@@ -36,18 +49,8 @@ public class CknDriveBase {
     //TODO: Add support for this.
     private boolean isHolonomic = false;
 
-    //Position Variables
-    private double xPos;
-    private double yPos;
-    private double heading;
-
     //Other info
     private double speed = 1.0;
-
-    //Wheel information
-    public int ticksPerRev = 1440;
-    public double diameter = 3.0;
-    private double gearRatio = 1.0;
 
     /**
      *  Initialize the motors to be used in the drive train.
@@ -57,7 +60,7 @@ public class CknDriveBase {
      * @param rearLeft The Rear-Left motor.
      * @param rearRight The Rear-Right motor.
      */
-    public CknDriveBase(DcMotor frontLeft, DcMotor frontRight, DcMotor rearLeft, DcMotor rearRight, DriveType mode){
+    public CknDriveBase(DcMotor frontLeft, DcMotor frontRight, DcMotor rearLeft, DcMotor rearRight, Parameters params){
         this.frontLeft = frontLeft;
         this.frontRight = frontRight;
         this.rearLeft = rearLeft;
@@ -70,11 +73,9 @@ public class CknDriveBase {
 
         resetEncoders();
 
-        this.mode = mode;
-    }
-
-    public CknDriveBase(DcMotor frontLeft, DcMotor frontRight, DcMotor rearLeft, DcMotor rearRight){
-        this(frontLeft, frontRight, rearLeft, rearRight, DriveType.TANK);
+        this.params = params;
+        // Default drive mode to first option on the list.
+        this.mode = params.driveTypes.get(0);
     }
 
     public void setMode(DriveType mode){
@@ -85,18 +86,18 @@ public class CknDriveBase {
         return mode;
     }
 
-    public void setWheelInfo(double diameter, int ticksPerRev, double gearRatio){
-        this.diameter = diameter;
-        this.ticksPerRev = ticksPerRev;
-        this.gearRatio = gearRatio;
-    }
+    // Allow outside access to variables in the Parameters class.
 
     public double getGearRatio(){
-        return gearRatio;
+        return params.gearRatio;
     }
 
-    public CknDriveBase(DcMotor frontLeft, DcMotor frontRight){
-        this(frontLeft, frontRight, null, null);
+    public double getWheelDiameter(){ return params.wheelDiameter; }
+
+    public double getTicksPerRev(){ return params.ticksPerRev; }
+
+    public CknDriveBase(DcMotor frontLeft, DcMotor frontRight, Parameters params){
+        this(frontLeft, frontRight, null, null, params);
     }
 
     /**
@@ -104,7 +105,7 @@ public class CknDriveBase {
      *
      * @param motorType the motor to invert.
      */
-    public void setInverted(MotorType motorType){
+    public void invertMotor(MotorType motorType){
         if(motorType == MotorType.FRONT_LEFT){
             this.frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         }
@@ -216,7 +217,7 @@ public class CknDriveBase {
                 tankDrive(y2, y1);
                 break;
             case ARCADE:
-                arcadeDrive(y1, x1);
+                arcadeDrive(y1, x2);
                 break;
             case MECANUM:
                 mecanumDrive_Cartesian(x1, y1, x2);
@@ -238,8 +239,8 @@ public class CknDriveBase {
         return speed;
     }
 
-    public void setInverted(boolean inverted){
-        speed *= -1;
+    public void setReversed(boolean reversed){
+        this.reversed = reversed;
     }
 
 
@@ -316,10 +317,6 @@ public class CknDriveBase {
         double xOut = x * cosA - y * sinA;
         double yOut = x * sinA + y * cosA;
         return new double[]{xOut, yOut};
-    }
-
-    public double getYPosition(){
-        return yPos;
     }
 
     public void stopMotors(){

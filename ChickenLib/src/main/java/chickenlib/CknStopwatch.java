@@ -1,6 +1,6 @@
 package chickenlib;
 
-public class CknStopwatch {
+public class CknStopwatch implements CknTaskManager.Task{
 
     private CknEvent event;
     private boolean active;
@@ -12,16 +12,29 @@ public class CknStopwatch {
     }
 
     public void setTimer(double time){
-        active = true;
         startTime = CknUtil.getCurrentTime();
         targetTime = time;
+        setTaskEnabled(true);
     }
 
-    public void handleStopwatch(){
-        if(active){
-            if(CknUtil.getCurrentTime() > startTime + targetTime){
-                event.set(true);
-            }
+    public void setTaskEnabled(boolean enabled){
+        if(enabled){
+            CknTaskManager.getInstance().registerTask(this, CknTaskManager.TaskType.PRECONTINUOUS);
+        } else {
+            CknTaskManager.getInstance().unregisterTask(this, CknTaskManager.TaskType.PRECONTINUOUS);
         }
+    }
+
+    @Override
+    public void preContinuous(){
+        if(CknUtil.getCurrentTime() > startTime + targetTime){
+            event.set(true);
+            setTaskEnabled(false);
+        }
+    }
+
+    @Override
+    public void postContinuous(){
+
     }
 }

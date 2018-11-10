@@ -39,7 +39,7 @@ public class PIDTest extends LinearOpMode {
             }
 
             robot.driveBase.tankDrive(robot.yPid.getOutput(), robot.yPid.getOutput());
-            robot.dashboard.setLine(1, "Y= " + robot.driveBase.getYPosition());
+            //robot.dashboard.setLine(1, "Y= " + robot.driveBase.getYPosition());
 
 
             //robot.driveBase.tankDrive(gamepad1.left_stick_y, gamepad1.right_stick_y);

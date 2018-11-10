@@ -19,7 +19,6 @@ public class MeasureOp extends LinearOpMode{
         waitForStart();
 
         while(opModeIsActive()){
-            robot.preContinuous();
 
             robot.driveBase.tankDrive(gamepad1.left_stick_y, gamepad1.right_stick_y);
 

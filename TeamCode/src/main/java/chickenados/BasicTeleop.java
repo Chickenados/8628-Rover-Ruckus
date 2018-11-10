@@ -20,7 +20,7 @@ public class BasicTeleop extends LinearOpMode {
         while (opModeIsActive()) {
 
             robot.driveBase.tankDrive(gamepad1.left_stick_y, gamepad1.right_stick_y);
-            robot.dashboard.setLine(1, "Y=" + robot.driveBase.getYPosition());
+            robot.dashboard.setLine(1, "Y=" + robot.locationTracker.getYPosition());
 
         }
 

@@ -19,13 +19,9 @@ import chickenlib.CknLocationTracker;
 import chickenlib.CknPIDController;
 import chickenlib.CknPIDDrive;
 import chickenlib.CknSmartDashboard;
+import chickenlib.CknTaskManager;
 
 public class RobotV1 implements CknPIDController.PIDInput{
-
-    public enum TaskType{
-        PRECONTINUOUS,
-        POSTCONTINUOUS;
-    }
 
     HardwareMap hwMap;
 
@@ -47,6 +43,7 @@ public class RobotV1 implements CknPIDController.PIDInput{
     public DcMotor liftMotor;
 
     Servo dropperServo;
+    CRServo collectorServo;
 
     public CknSmartDashboard dashboard;
 
@@ -63,6 +60,7 @@ public class RobotV1 implements CknPIDController.PIDInput{
     public RobotV1Lift lift;
     public RobotV1Grabber grabber;
     public RobotV1Dropper dropper;
+    public RobotV1Collector collector;
     public RobotV1VisionAnalyzer analyzer = new RobotV1VisionAnalyzer(LABEL_GOLD_MINERAL);
 
     public RobotV1(HardwareMap hwMap, Telemetry telemetry){
@@ -101,8 +99,25 @@ public class RobotV1 implements CknPIDController.PIDInput{
         }
 
         //
+        // Initialize sensors
+        //
+
+        // IMU
+        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+        parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
+        parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
+        parameters.loggingEnabled      = true;
+        parameters.loggingTag          = "IMU";
+        parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
+
+        imu = hwMap.get(BNO055IMU.class, "imu");
+        imu.initialize(parameters);
+
+        //
         // Initialize Drive Train system
         //
+
         frontLeft = hwMap.dcMotor.get(RobotV1Info.FRONT_LEFT_NAME);
         frontRight = hwMap.dcMotor.get(RobotV1Info.FRONT_RIGHT_NAME);
         rearLeft = hwMap.dcMotor.get(RobotV1Info.REAR_LEFT_NAME);
@@ -123,10 +138,28 @@ public class RobotV1 implements CknPIDController.PIDInput{
         rearLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rearRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        driveBase = new CknDriveBase(frontLeft, frontRight, rearLeft, rearRight);
-        driveBase.setWheelInfo(RobotV1Info.WHEEL_DIAMETER_INCHES, RobotV1Info.ENCODER_TICKS_PER_REV, RobotV1Info.GEAR_RATIO);
-        locationTracker = new CknLocationTracker(driveBase);
+        CknDriveBase.Parameters params = new CknDriveBase.Parameters();
+        params.driveTypes.add(CknDriveBase.DriveType.TANK);
+        params.driveTypes.add(CknDriveBase.DriveType.ARCADE);
+        params.ticksPerRev = RobotV1Info.ENCODER_TICKS_PER_REV;
+        params.gearRatio = RobotV1Info.GEAR_RATIO;
+        params.wheelDiameter = RobotV1Info.WHEEL_DIAMETER_INCHES;
+
+        driveBase = new CknDriveBase(frontLeft, frontRight, rearLeft, rearRight, params);
+        driveBase.setMode(CknDriveBase.DriveType.TANK);
+
+        //
+        // Location Tracking subsystem
+        //
+
+        CknLocationTracker.Parameters LTParams = new CknLocationTracker.Parameters();
+        LTParams.useEncoders = true;
+        LTParams.useGyro = true;
+
+        locationTracker = new CknLocationTracker(driveBase, LTParams);
+        locationTracker.setBN055IMU(imu);
         locationTracker.resetLocation();
+        locationTracker.setTaskEnabled(true);
 
         //
         // Initialize SmartDashboard system
@@ -144,22 +177,6 @@ public class RobotV1 implements CknPIDController.PIDInput{
                 RobotV1Info.TURN_PID_I, RobotV1Info.TURN_PID_D), this, 2, 1);
 
         pidDrive = new CknPIDDrive(driveBase, yPid, turnPid);
-
-        //
-        // Initialize sensors
-        //
-
-        // IMU
-        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-        parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
-        parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
-        parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
-        parameters.loggingEnabled      = true;
-        parameters.loggingTag          = "IMU";
-        parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
-
-        imu = hwMap.get(BNO055IMU.class, "imu");
-        imu.initialize(parameters);
 
         //
         // Lift Subsystems
@@ -181,8 +198,11 @@ public class RobotV1 implements CknPIDController.PIDInput{
         dropperServo = hwMap.get(Servo.class, RobotV1Info.DROPPER_NAME);
         dropper = new RobotV1Dropper(dropperServo);
 
-
-
+        //
+        // Collector Subsystem
+        //
+        collectorServo = hwMap.get(CRServo.class, RobotV1Info.COLLECTOR_NAME);
+        collector = new RobotV1Collector(collectorServo);
     }
 
     private void initVuforia(){
@@ -249,22 +269,5 @@ public class RobotV1 implements CknPIDController.PIDInput{
         return 0.0;
     }
 
-    //
-    // Looped Methods
-    //
-
-    // Call at the beginning of the while loop
-    public void preContinuous(){
-        locationTracker.trackLocation();
-        locationTracker.setHeading(imu.getAngularOrientation().firstAngle);
-        lift.handlePids();
-        dropper.handleDropper();
-        pidDrive.handlePIDs();
-    }
-
-    // Call at the end of the while loop
-    public void postContinuous(){
-
-    }
 
 }

@@ -1,9 +1,11 @@
 package chickenlib;
 
+import com.qualcomm.hardware.bosch.BNO055IMU;
+
 /**
  * For keeping track of the robot's location on the field.
  */
-public class CknLocationTracker {
+public class CknLocationTracker implements CknTaskManager.Task{
 
     enum Units{
         TICKS(1),
@@ -15,10 +17,16 @@ public class CknLocationTracker {
         Units(int unitConversion){this.conversion = unitConversion;}
     }
 
-    // Options for sensors that can be used to track location.
-    private boolean useAccelerometer;
-    private boolean useEncoders = true;
-    private boolean useGyro;
+    public static class Parameters {
+        public boolean useAccelerometer = false;
+        public boolean useEncoders = false;
+        public boolean useGyro = false;
+    }
+
+    private Parameters params;
+
+    //TODO: Temporary variable.
+    BNO055IMU imu;
 
     //locations
     private double xPos = 0.0;
@@ -28,10 +36,14 @@ public class CknLocationTracker {
     //Drive base is for accessing motor encoders.
     private CknDriveBase driveBase;
 
-    public CknLocationTracker(CknDriveBase driveBase){
+    public CknLocationTracker(CknDriveBase driveBase, Parameters params){
         this.driveBase = driveBase;
-        if(driveBase != null) useEncoders = true;
-        //TODO: Proper variable setting
+        this.params = params;
+    }
+
+    //TODO: Temporary method, this should be handled better.
+    public void setBN055IMU(BNO055IMU imu){
+        this.imu = imu;
     }
 
     public void resetLocation(){
@@ -39,7 +51,7 @@ public class CknLocationTracker {
         yPos = 0.0;
         heading = 0.0;
 
-        if(useEncoders){
+        if(params.useEncoders){
             driveBase.resetEncoders();
         }
     }
@@ -64,17 +76,24 @@ public class CknLocationTracker {
         return heading;
     }
 
-    /**
-     * Call this as often as possible to keep an accurate representation of the current location.
-     */
-    public void trackLocation(){
+    public void setTaskEnabled(boolean enabled){
+        if(enabled){
+            CknTaskManager.getInstance().registerTask(this, CknTaskManager.TaskType.PRECONTINUOUS);
+        } else {
+            CknTaskManager.getInstance().unregisterTask(this, CknTaskManager.TaskType.PRECONTINUOUS);
+        }
+    }
+
+    @Override
+    public void preContinuous(){
         int numMotors = driveBase.getNumMotors();
 
         // Calculations of position using encoders.
-        if(useAccelerometer){
+        if(params.useAccelerometer){
             //TODO: Accelerometer location support.
+            //TODO: Fix units to allow for both accelerometer and encoder measurement.
         }
-        if(useEncoders){
+        if(params.useEncoders){
 
             if(!driveBase.isHolonomic()){
 
@@ -106,12 +125,18 @@ public class CknLocationTracker {
                 //TODO: Holonomic Location Tracking
             }
         }
-        if(useGyro){
-            //TODO: Gyro support
-        }
 
-        //CknSmartDashboard.getInstance().setLine(1, "Y: " + yPos + " Heading: " + heading);
+        if(params.useGyro){
+            //TODO: Gyro support
+            if(imu != null){
+                heading = imu.getAngularOrientation().firstAngle;
+            }
+        }
     }
 
+    @Override
+    public void postContinuous(){
+
+    }
 
 }

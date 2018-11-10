@@ -43,8 +43,6 @@ public class MeasureOscillation extends LinearOpMode {
 
         // Run PIDS and collect data until X button is pressed.
         while(opModeIsActive() && runCollection){
-            robot.preContinuous();
-
             if(lastData == null){
                 lastData = new CknData(pidToMeasure.getError(), CknUtil.getCurrentTime());
             }

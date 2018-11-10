@@ -7,10 +7,13 @@ import chickenados.robotv1.RobotV1;
 import chickenados.robotv1.RobotV1VisionAnalyzer;
 import chickenlib.CknEvent;
 import chickenlib.CknStateMachine;
+import chickenlib.CknTaskManager;
 import chickenlib.CknUtil;
 
 @Autonomous(name = "V1 Red Depot")
 public class V1RedDepot extends LinearOpMode{
+
+    CknTaskManager mgr = new CknTaskManager();
 
     enum State{
         SCAN_MINERALS,
@@ -65,8 +68,8 @@ public class V1RedDepot extends LinearOpMode{
         waitForStart();
 
         while(opModeIsActive()) {
-
-            robot.preContinuous();
+            // Execute precontinuous tasks at the beginning of the loop.
+            mgr.executeTasks(CknTaskManager.TaskType.PRECONTINUOUS);
 
             robot.dashboard.setLine(1, "State: " + currentState);
             robot.dashboard.setLine(2, "Event: " + event.isTriggered());
@@ -215,6 +218,9 @@ public class V1RedDepot extends LinearOpMode{
 
 
             }
+
+            // Execute all postcontinuous tasks at the end of the loop.
+            mgr.executeTasks(CknTaskManager.TaskType.POSTCONTINUOUS);
         }
 
 

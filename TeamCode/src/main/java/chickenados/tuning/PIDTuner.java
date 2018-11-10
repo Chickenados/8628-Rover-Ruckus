@@ -61,8 +61,6 @@ public class PIDTuner extends LinearOpMode {
 
         while(opModeIsActive()){
 
-            robot.preContinuous();
-
             if(currentPid == PIDType.TURN){
                 robot.turnPid.printPIDValues();
             } else if(currentPid == PIDType.DRIVE){

@@ -43,10 +43,10 @@ public class RobotV0 implements CknPIDController.PIDInput{
         rearLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rearRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        driveBase = new CknDriveBase(rearLeft, rearRight);
+        /*driveBase = new CknDriveBase(rearLeft, rearRight);
         driveBase.setWheelInfo(RobotV0Info.WHEEL_DIAMETER_INCHES, RobotV0Info.ENCODER_TICKS_PER_REV, 1);
         locationTracker = new CknLocationTracker(driveBase);
-        locationTracker.resetLocation();
+        locationTracker.resetLocation();*/
 
         //
         // Initialize Drive Train PIDs
@@ -106,9 +106,7 @@ public class RobotV0 implements CknPIDController.PIDInput{
 
     // Call at the beginnnig of the TeleOp while loop
     public void preContinuous(){
-        locationTracker.trackLocation();
-        locationTracker.setHeading(imu.getAngularOrientation().firstAngle);
-        cknPIDDrive.handlePIDs();
+
     }
 
 }
