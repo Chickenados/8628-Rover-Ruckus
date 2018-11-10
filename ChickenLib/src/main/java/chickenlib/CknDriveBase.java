@@ -9,7 +9,7 @@ public class CknDriveBase {
 
     public static class Parameters {
 
-        public ArrayList<DriveType> driveTypes;
+        public ArrayList<DriveType> driveTypes = new ArrayList<>();
 
         public int ticksPerRev = 1440;
         public double gearRatio = 3.0;

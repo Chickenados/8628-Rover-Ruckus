@@ -9,7 +9,8 @@ public class CknTaskManager {
 
     // Create this class as a singleton class, we wouldn't wan't multiple task managers running.
     public CknTaskManager(){
-            instance = this;
+        taskObjects = new ArrayList<>();
+        instance = this;
     }
 
     public static CknTaskManager getInstance() {
@@ -38,10 +39,11 @@ public class CknTaskManager {
     public class TaskObject {
 
         private Task task;
-        private HashSet<TaskType> taskTypes = new HashSet<>();
+        private HashSet<TaskType> taskTypes;
 
         public TaskObject(Task task){
             this.task = task;
+            taskTypes = new HashSet<>();
         }
 
         /**
@@ -91,7 +93,7 @@ public class CknTaskManager {
     }
 
     // This array list contains all TaskObjects
-    ArrayList<TaskObject> taskObjects = new ArrayList<>();
+    ArrayList<TaskObject> taskObjects;
 
     public void registerTask(Task task, TaskType type){
         TaskObject taskObject = null;
