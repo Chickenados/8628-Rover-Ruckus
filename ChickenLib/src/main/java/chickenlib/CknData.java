@@ -2,11 +2,11 @@ package chickenlib;
 
 public class CknData<T> {
 
-    public T data;
+    public T value;
     public double timestamp;
 
-    public CknData(T data, double timestamp){
-        this.data = data;
+    public CknData(T value, double timestamp){
+        this.value = value;
         this.timestamp = timestamp;
     }
 
