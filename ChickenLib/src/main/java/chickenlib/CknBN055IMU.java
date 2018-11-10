@@ -10,10 +10,14 @@ public class CknBN055IMU{
         this.imu = imu;
 
         imu.initialize(params);
-        
+
     }
 
     public class Gyro extends CknGyro {
+
+        public Gyro(int numAxes){
+            super(numAxes);
+        }
 
         public CknData getData(int axis){
             if(axis == 1){
@@ -23,6 +27,7 @@ public class CknBN055IMU{
             } else if(axis == 3){
 
             }
+            return null;
         }
 
     }
