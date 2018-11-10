@@ -52,12 +52,12 @@ public class MeasureOscillation extends LinearOpMode {
             data.add(currentData);
 
             // Detect change of sign
-            if((double) lastData.data * (double) currentData.data < 0){
+            if((double) lastData.value * (double) currentData.value < 0){
                 crossesZero[crossCount] = currentData;
                 crossCount++;
                 robot.dashboard.setLine(1, "Cross Count: " + crossCount);
                 robot.dashboard.setLine(crossCount + 2,
-                        "" + currentData.data + " Time:" + currentData.timestamp);
+                        "" + currentData.value + " Time:" + currentData.timestamp);
             }
 
             lastData = currentData;

@@ -6,8 +6,11 @@ public class CknBN055IMU{
 
     BNO055IMU imu;
 
-    public CknBN055IMU(BNO055IMU imu){
+    public CknBN055IMU(BNO055IMU imu, BNO055IMU.Parameters params){
         this.imu = imu;
+
+        imu.initialize(params);
+        
     }
 
     public class Gyro extends CknGyro {
