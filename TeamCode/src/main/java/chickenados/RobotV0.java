@@ -9,10 +9,10 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 import chickenlib.CknDriveBase;
-import chickenlib.CknLocationTracker;
+import chickenlib.location.CknLocationTracker;
 import chickenlib.CknPIDController;
 import chickenlib.CknPIDDrive;
-import chickenlib.CknSmartDashboard;
+import chickenlib.util.CknSmartDashboard;
 
 public class RobotV0 implements CknPIDController.PIDInput{
 

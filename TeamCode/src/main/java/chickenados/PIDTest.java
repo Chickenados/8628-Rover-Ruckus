@@ -3,11 +3,8 @@ package chickenados;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import chickenlib.CknDriveBase;
-import chickenlib.CknEvent;
+import chickenlib.util.CknEvent;
 import chickenlib.CknStateMachine;
-
-import static chickenados.PIDTest.State.RUN_PID;
 
 @TeleOp(name = "PID Teleop", group = "8628")
 public class PIDTest extends LinearOpMode {

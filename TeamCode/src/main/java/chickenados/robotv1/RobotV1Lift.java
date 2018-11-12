@@ -3,10 +3,10 @@ package chickenados.robotv1;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
 
-import chickenlib.CknEvent;
+import chickenlib.util.CknEvent;
 import chickenlib.CknPIDController;
 import chickenlib.CknTaskManager;
-import chickenlib.CknUtil;
+import chickenlib.util.CknUtil;
 
 public class RobotV1Lift implements CknTaskManager.Task{
 

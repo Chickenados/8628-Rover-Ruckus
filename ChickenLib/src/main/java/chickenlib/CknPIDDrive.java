@@ -1,5 +1,8 @@
 package chickenlib;
 
+import chickenlib.util.CknEvent;
+import chickenlib.util.CknUtil;
+
 public class CknPIDDrive implements CknTaskManager.Task{
 
     CknDriveBase driveBase;

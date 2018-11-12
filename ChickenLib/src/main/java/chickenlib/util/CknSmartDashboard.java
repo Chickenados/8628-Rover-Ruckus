@@ -1,10 +1,10 @@
-package chickenlib;
+package chickenlib.util;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
-import javax.crypto.spec.DESedeKeySpec;
+import chickenlib.CknTaskManager;
 
-public class CknSmartDashboard {
+public class CknSmartDashboard implements CknTaskManager.Task {
 
     private static final int DEFAULT_NUM_LINES = 16;
 
@@ -70,7 +70,17 @@ public class CknSmartDashboard {
         telemetry.update();
     }
 
-    public void updateDisplay(){
-        telemetry.update();
+    public void appendInfo(){
+
+    }
+
+    @Override
+    public void preContinuous(){
+
+    }
+
+    @Override
+    public void postContinuous(){
+
     }
 }

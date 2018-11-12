@@ -7,9 +7,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import chickenados.robotv1.RobotV1;
-import chickenlib.CknData;
+import chickenlib.util.CknData;
 import chickenlib.CknPIDController;
-import chickenlib.CknUtil;
+import chickenlib.util.CknUtil;
 
 @TeleOp(name = "Measure Oscillation", group = "PID")
 public class MeasureOscillation extends LinearOpMode {

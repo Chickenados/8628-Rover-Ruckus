@@ -1,4 +1,4 @@
-package chickenlib;
+package chickenlib.util;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;

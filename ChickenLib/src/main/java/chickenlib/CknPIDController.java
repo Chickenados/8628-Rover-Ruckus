@@ -1,5 +1,9 @@
 package chickenlib;
 
+import chickenlib.inputstreams.CknInputStream;
+import chickenlib.util.CknSmartDashboard;
+import chickenlib.util.CknUtil;
+
 public class CknPIDController {
 
     private double pTerm;
@@ -12,14 +16,6 @@ public class CknPIDController {
 
     //TODO: Add input/output caps, include checks for those caps in I term, finish reset method,
     //TODO: add more options to make a more versatile PID control.
-
-    public interface PIDInput {
-        /**
-         * This is the method that passes any input into the PID algorithm
-         * @return
-         */
-        double getInput(CknPIDController instance);
-    }
 
     // A class to group all of the PID coefficeints together
     public static class PIDCoefficients {
@@ -59,7 +55,7 @@ public class CknPIDController {
     }
 
     PIDCoefficients pidCoef;
-    PIDInput pidInput;
+    CknInputStream inputStream;
 
     private double threshold;
     double currError = 0.0;
@@ -76,13 +72,13 @@ public class CknPIDController {
 
     private double minOutput = -1.0, maxOutput = 1.0;
 
-    public CknPIDController(PIDCoefficients pidCoef, PIDInput pidInput, double threshold){
-        this(pidCoef, pidInput, threshold, 0);
+    public CknPIDController(PIDCoefficients pidCoef, CknInputStream inputStream, double threshold){
+        this(pidCoef, inputStream, threshold, 0);
     }
 
-    public CknPIDController(PIDCoefficients pidCoef, PIDInput pidInput, double threshold, double timeThreshold){
+    public CknPIDController(PIDCoefficients pidCoef, CknInputStream inputStream, double threshold, double timeThreshold){
         this.pidCoef = pidCoef;
-        this.pidInput = pidInput;
+        this.inputStream = inputStream;
         this.threshold = threshold;
         this.timeThreshold = timeThreshold;
     }
@@ -135,7 +131,7 @@ public class CknPIDController {
 
         isRelative = relative;
 
-        double input = this.pidInput.getInput(this);
+        double input = (double) inputStream.getInput();
 
         prevTime = CknUtil.getCurrentTime();
 
@@ -151,7 +147,7 @@ public class CknPIDController {
     }
 
     public boolean onTarget(){
-        currError = setPoint - pidInput.getInput(this);
+        currError = setPoint - (double) inputStream.getInput();
         if(Math.abs(currError) > threshold){
             targetTime = CknUtil.getCurrentTime();
         }
@@ -195,7 +191,7 @@ public class CknPIDController {
         double currTime = CknUtil.getCurrentTime();
         deltaTime = currTime - prevTime;
 
-        double input = pidInput.getInput(this);
+        double input = (double) inputStream.getInput();
         currError = setPoint - input;
         deltaError = currError - prevError;
 

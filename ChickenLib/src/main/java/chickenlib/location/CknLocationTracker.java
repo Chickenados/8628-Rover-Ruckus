@@ -1,23 +1,24 @@
-package chickenlib;
+package chickenlib.location;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
+
+import chickenlib.CknDriveBase;
+import chickenlib.CknTaskManager;
+import chickenlib.sensor.CknAccelerometer;
+import chickenlib.sensor.CknGyro;
+import chickenlib.util.CknUnitConverter;
+
+import static chickenlib.util.CknUnitConverter.Unit.INCHES;
 
 /**
  * For keeping track of the robot's location on the field.
  */
-public class CknLocationTracker implements CknTaskManager.Task{
-
-    enum Units{
-        TICKS(1),
-        INCHES(1),
-        MILLIMETERS(1);
-
-        int conversion;
-
-        Units(int unitConversion){this.conversion = unitConversion;}
-    }
+public class CknLocationTracker implements CknTaskManager.Task {
 
     public static class Parameters {
+        public CknUnitConverter.Unit positionUnit = INCHES;
+        // These are the options for which inputs we can use to track location.
+        // If multiple are set to true, the location will be averaged.
         public boolean useAccelerometer = false;
         public boolean useEncoders = false;
         public boolean useGyro = false;
@@ -25,31 +26,35 @@ public class CknLocationTracker implements CknTaskManager.Task{
 
     private Parameters params;
 
-    //TODO: Temporary variable.
-    BNO055IMU imu;
-
     //locations
     private double xPos = 0.0;
     private double yPos = 0.0;
     private double heading = 0.0;
+    CknLocation location;
 
     //Drive base is for accessing motor encoders.
     private CknDriveBase driveBase;
+    private CknAccelerometer accelerometer;
+    private CknGyro gyro;
+
+    public CknLocationTracker(CknDriveBase driveBase, CknGyro gyro, CknAccelerometer accelerometer, Parameters params){
+        this.driveBase = driveBase;
+        this.params = params;
+        this.gyro = gyro;
+        this.accelerometer = accelerometer;
+    }
 
     public CknLocationTracker(CknDriveBase driveBase, Parameters params){
-        this.driveBase = driveBase;
+        params.useAccelerometer = false;
+        params.useGyro = false;
         this.params = params;
     }
 
-    //TODO: Temporary method, this should be handled better.
-    public void setBN055IMU(BNO055IMU imu){
-        this.imu = imu;
-    }
-
     public void resetLocation(){
-        xPos = 0.0;
-        yPos = 0.0;
-        heading = 0.0;
+        location.x = 0.0;
+        location.y = 0.0;
+        location.z = 0.0;
+        location.heading = 0.0;
 
         if(params.useEncoders){
             driveBase.resetEncoders();
@@ -64,16 +69,8 @@ public class CknLocationTracker implements CknTaskManager.Task{
     //
     // Methods for retreiving information.
     //
-    public double getYPosition(){
-        return yPos;
-    }
-
-    public double getXPosition(){
-        return xPos;
-    }
-
-    public double getHeading(){
-        return heading;
+    public CknLocation getLocation() {
+        return location;
     }
 
     public void setTaskEnabled(boolean enabled){
@@ -90,8 +87,7 @@ public class CknLocationTracker implements CknTaskManager.Task{
 
         // Calculations of position using encoders.
         if(params.useAccelerometer){
-            //TODO: Accelerometer location support.
-            //TODO: Fix units to allow for both accelerometer and encoder measurement.
+            //TODO: Accelerometer Input action.
         }
         if(params.useEncoders){
 
@@ -105,7 +101,12 @@ public class CknLocationTracker implements CknTaskManager.Task{
                     //Average out the two values from both sides, this isn't a real
                     // y position, just the distance the robot travels.
                     yPos = (leftEncoder + rightEncoder) / 2;
-
+                    // Convert to inches
+                    yPos = yPos / ((((3.1415 * driveBase.getWheelDiameter())) / driveBase.getTicksPerRev()) * driveBase.getGearRatio());
+                    // Convert to other unit if needed.
+                    if(params.positionUnit != INCHES){
+                        yPos = CknUnitConverter.getInstance().convertValue(INCHES, params.positionUnit, yPos);
+                    }
 
                 }
                 else if(numMotors == 4){
@@ -127,9 +128,8 @@ public class CknLocationTracker implements CknTaskManager.Task{
         }
 
         if(params.useGyro){
-            //TODO: Gyro support
-            if(imu != null){
-                heading = imu.getAngularOrientation().firstAngle;
+            if(gyro != null){
+                heading = (double) gyro.getData(1, CknGyro.DataType.HEADING).value;
             }
         }
     }

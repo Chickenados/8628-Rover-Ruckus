@@ -2,7 +2,7 @@ package chickenados.robotv1;
 
 import com.qualcomm.robotcore.hardware.CRServo;
 
-import chickenlib.CknEvent;
+import chickenlib.util.CknEvent;
 
 public class RobotV1Grabber {
 

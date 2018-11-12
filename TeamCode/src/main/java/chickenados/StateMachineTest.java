@@ -4,12 +4,9 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
-
-import chickenlib.CknEvent;
-import chickenlib.CknSmartDashboard;
+import chickenlib.util.CknEvent;
+import chickenlib.util.CknSmartDashboard;
 import chickenlib.CknStateMachine;
-import chickenlib.CknStopwatch;
 
 /**
  * This class is a demonstration of the State Machine class. It allows for the linearization

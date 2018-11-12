@@ -1,6 +1,8 @@
-package chickenlib;
+package chickenlib.util;
 
-public class CknStopwatch implements CknTaskManager.Task{
+import chickenlib.CknTaskManager;
+
+public class CknStopwatch implements CknTaskManager.Task {
 
     private CknEvent event;
     private boolean active;

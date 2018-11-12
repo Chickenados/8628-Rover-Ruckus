@@ -1,4 +1,4 @@
-package chickenlib;
+package chickenlib.util;
 
 public class CknEvent {
 
