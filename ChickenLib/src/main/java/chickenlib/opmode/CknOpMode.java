@@ -34,7 +34,7 @@ public abstract class CknOpMode extends LinearOpMode {
 
     @Override
     public void runOpMode(){
-        dash = new CknSmartDashboard(telemetry, NUM_LINES);
+        dash = new CknSmartDashboard(telemetry, 1080, NUM_LINES);
 
         cknInit();
 
