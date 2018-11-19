@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
 
-import chickenlib.util.CknSmartDashboard;
+import chickenlib.display.CknSmartDashboard;
 
 @TeleOp(name = "Measure Encoder Ticks")
 public class MeasureEncoder extends LinearOpMode{

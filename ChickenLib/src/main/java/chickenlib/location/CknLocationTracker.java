@@ -110,26 +110,30 @@ public class CknLocationTracker implements CknTaskManager.Task {
 
                 }
                 else if(numMotors == 4){
-                    //TODO: Real 4 motor support
+
                     double enc1 = driveBase.getEncoderValue(CknDriveBase.MotorType.FRONT_LEFT);
                     double enc2 = driveBase.getEncoderValue(CknDriveBase.MotorType.FRONT_RIGHT);
                     double enc3 = driveBase.getEncoderValue(CknDriveBase.MotorType.REAR_LEFT);
                     double enc4 = driveBase.getEncoderValue(CknDriveBase.MotorType.REAR_RIGHT);
 
                     yPos = (enc1 + enc2 + enc3 + enc4) / 4;
+
+                    if(driveBase.getMode() == CknDriveBase.DriveType.MECANUM) {
+                        xPos = ((enc1 + enc4) - (enc2 + enc3)) / 4;
+                    }
                 }
                 else
                 {
                     throw new IllegalArgumentException("Location Tracking doesn't support current drive train.");
                 }
             } else {
-                //TODO: Holonomic Location Tracking
+
             }
         }
 
         if(params.useGyro){
             if(gyro != null){
-                heading = (double) gyro.getData(1, CknGyro.DataType.HEADING).value;
+                heading = gyro.getData(0, CknGyro.DataType.HEADING).value;
             }
         }
     }

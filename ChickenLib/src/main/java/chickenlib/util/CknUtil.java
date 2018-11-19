@@ -20,4 +20,20 @@ public class CknUtil {
         bd = bd.setScale(places, RoundingMode.HALF_UP);
         return bd.doubleValue();
     }
+
+    public static class CknLoopCounter{
+
+        private static CknLoopCounter instance;
+
+        public static CknLoopCounter getInstance() {
+            if(instance == null){
+                instance = new CknLoopCounter();
+            }
+            return instance;
+        }
+
+        public long loop;
+
+        public long getLoopCount(){ return loop; }
+    }
 }

@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import chickenlib.util.CknEvent;
-import chickenlib.util.CknSmartDashboard;
+import chickenlib.display.CknSmartDashboard;
 import chickenlib.CknStateMachine;
 
 /**

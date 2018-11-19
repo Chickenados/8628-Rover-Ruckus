@@ -2,13 +2,14 @@ package chickenlib.sensor;
 
 import android.provider.ContactsContract;
 
+import chickenlib.logging.CknDbgLog;
 import chickenlib.util.CknData;
 import chickenlib.util.CknIntegrator;
+import chickenlib.util.CknUtil;
 
 public abstract class CknAccelerometer extends CknSensor<CknAccelerometer.DataType>{
 
     public static class Parameters {
-        public DataType dataType = DataType.ACCELERATION;
         public boolean doIntegration = false;
     }
 
@@ -25,8 +26,10 @@ public abstract class CknAccelerometer extends CknSensor<CknAccelerometer.DataTy
         super(3);
         this.params = params;
 
-        if(params.doIntegration && params.dataType == DataType.ACCELERATION){
-            integrator = new CknIntegrator<>(3, this, DataType.ACCELERATION);
+        if(params.doIntegration){
+            CknIntegrator.Parameters iParams = new CknIntegrator.Parameters();
+            iParams.doDoubleIntegration = true;
+            integrator = new CknIntegrator<>(3, this, DataType.ACCELERATION, iParams);
         }
     }
 
@@ -36,10 +39,35 @@ public abstract class CknAccelerometer extends CknSensor<CknAccelerometer.DataTy
 
     public abstract CknData<Double> getRawZAccel();
 
-    public void setEnabled(boolean enabled){
-        if(integrator != null) integrator.setTaskEnabled(enabled);
+    public void startIntegration(){
+        if(params.doIntegration) {
+            integrator.setTaskEnabled(true);
+        }
     }
 
+    public void stopIntegration(){
+        if(params.doIntegration) {
+            integrator.setTaskEnabled(false);
+        }
+    }
 
+    public CknData<Double> getIntegratedData(int axis){
+        if(params.doIntegration){
+            return integrator.getIntegratedData(axis);
+        } else {
+            CknDbgLog.msg(CknDbgLog.Priority.WARN,
+                    "Attempted to retreive integrated data when doIntegration is false!");
+            return new CknData<>(0.0, CknUtil.getCurrentTime());
+        }
+    }
 
+    public CknData<Double> getDoubleIntegratedData(int axis) {
+        if(params.doIntegration){
+            return integrator.getDoubleIntegratedData(axis);
+        } else {
+            CknDbgLog.msg(CknDbgLog.Priority.WARN,
+                    "Attempted to retreive integrated data when doIntegration is false!");
+            return new CknData<>(0.0, CknUtil.getCurrentTime());
+        }
+    }
 }

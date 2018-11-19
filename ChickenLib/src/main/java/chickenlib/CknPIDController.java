@@ -1,7 +1,7 @@
 package chickenlib;
 
 import chickenlib.inputstreams.CknInputStream;
-import chickenlib.util.CknSmartDashboard;
+import chickenlib.display.CknSmartDashboard;
 import chickenlib.util.CknUtil;
 
 public class CknPIDController {
@@ -13,9 +13,6 @@ public class CknPIDController {
 
     private double deltaTime;
     private double deltaError;
-
-    //TODO: Add input/output caps, include checks for those caps in I term, finish reset method,
-    //TODO: add more options to make a more versatile PID control.
 
     // A class to group all of the PID coefficeints together
     public static class PIDCoefficients {

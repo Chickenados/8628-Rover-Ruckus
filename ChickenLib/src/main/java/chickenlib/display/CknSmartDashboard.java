@@ -1,8 +1,12 @@
-package chickenlib.util;
+package chickenlib.display;
+
+import android.graphics.Paint;
+import android.widget.TextView;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 import chickenlib.CknTaskManager;
+import chickenlib.logging.CknDbgLog;
 
 public class CknSmartDashboard implements CknTaskManager.Task {
 
@@ -12,21 +16,30 @@ public class CknSmartDashboard implements CknTaskManager.Task {
     private Telemetry telemetry = null;
     private Telemetry.Item[] display;
 
+    private int displayWidth;
+
+    private TextView textView;
+    private Paint paint;
+
     /**
      * Create a new instance of the Smart Dashboard
      * @param telemetry telemetry object.
      * @return instance
      */
-    public static CknSmartDashboard createInstance(Telemetry telemetry, int numLines){
+    public static CknSmartDashboard createInstance(Telemetry telemetry, int displayWidth, int numLines){
         if(instance == null){
-            instance = new CknSmartDashboard(telemetry, numLines);
+            instance = new CknSmartDashboard(telemetry, displayWidth, numLines);
         }
 
         return instance;
     }
 
+    public static CknSmartDashboard createInstance(Telemetry telemetry, int displayWidth){
+        return createInstance(telemetry, displayWidth, DEFAULT_NUM_LINES);
+    }
+
     public static CknSmartDashboard createInstance(Telemetry telemetry){
-        return createInstance(telemetry, DEFAULT_NUM_LINES);
+        return createInstance(telemetry, 1080, DEFAULT_NUM_LINES);
     }
 
     /**
@@ -40,9 +53,12 @@ public class CknSmartDashboard implements CknTaskManager.Task {
     /**
      * Constructor
      * @param telemetry
+     * @param displayWidth
      * @param numLines
      */
-    public CknSmartDashboard(Telemetry telemetry, int numLines){
+    public CknSmartDashboard(Telemetry telemetry, int displayWidth, int numLines){
+
+        this.displayWidth = displayWidth;
 
         // Turns off autoClear and creates a blank dashboard.
         this.telemetry = telemetry;
@@ -68,6 +84,20 @@ public class CknSmartDashboard implements CknTaskManager.Task {
             display[i].setValue("");
         }
         telemetry.update();
+    }
+
+    public void setTextView(TextView textView){
+        this.textView = textView;
+        this.paint = textView.getPaint();
+    }
+
+    public String alignRight(String message){
+        if(paint != null){
+            int padding = Math.round(paint.measureText(" "));
+        }
+        CknDbgLog.msg(CknDbgLog.Priority.WARN, "Cannot align text without TextView!");
+        return message;
+
     }
 
     public void appendInfo(){

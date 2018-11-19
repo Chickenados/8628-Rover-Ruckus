@@ -1,7 +1,5 @@
 package chickenados.robotv1;
 
-import com.qualcomm.hardware.bosch.BNO055IMU;
-import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -20,11 +18,12 @@ import chickenlib.inputstreams.CknLocationInputStream;
 import chickenlib.location.CknLocationTracker;
 import chickenlib.CknPIDController;
 import chickenlib.CknPIDDrive;
-import chickenlib.util.CknSmartDashboard;
+import chickenlib.opmode.CknRobot;
+import chickenlib.display.CknSmartDashboard;
 import chickenlib.sensor.CknAccelerometer;
 import chickenlib.sensor.CknBNO055IMU;
 
-public class RobotV1{
+public class RobotV1 extends CknRobot {
 
     HardwareMap hwMap;
 
@@ -105,21 +104,11 @@ public class RobotV1{
         // Initialize sensors
         //
 
-        // IMU
-        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-        parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
-        parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
-        parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
-        parameters.loggingEnabled      = true;
-        parameters.loggingTag          = "IMU";
-        parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
-
         // Acclerometer Parameters
         CknAccelerometer.Parameters aParameters = new CknAccelerometer.Parameters();
         aParameters.doIntegration = true;
-        aParameters.dataType = CknAccelerometer.DataType.ACCELERATION;
 
-        imu = new CknBNO055IMU(hwMap.get(BNO055IMU.class, RobotV1Info.IMU_NAME), parameters, aParameters);
+        imu = new CknBNO055IMU(hwMap,"imu", aParameters);
 
         //
         // Initialize Drive Train system
