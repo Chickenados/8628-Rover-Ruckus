@@ -5,10 +5,10 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import chickenados.robotv1.RobotV1;
 import chickenados.robotv1.RobotV1VisionAnalyzer;
-import chickenlib.CknEvent;
+import chickenlib.util.CknEvent;
 import chickenlib.CknStateMachine;
 import chickenlib.CknTaskManager;
-import chickenlib.CknUtil;
+import chickenlib.util.CknUtil;
 
 @Autonomous(name = "V1 COMPETITION Crater")
 public class V1CompCrater extends LinearOpMode{

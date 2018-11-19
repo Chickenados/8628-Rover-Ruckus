@@ -7,9 +7,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import chickenados.robotv1.RobotV1;
-import chickenlib.CknData;
+import chickenlib.util.CknData;
 import chickenlib.CknPIDController;
-import chickenlib.CknUtil;
+import chickenlib.util.CknUtil;
 
 @TeleOp(name = "Measure Oscillation", group = "PID")
 public class MeasureOscillation extends LinearOpMode {
@@ -44,20 +44,20 @@ public class MeasureOscillation extends LinearOpMode {
         // Run PIDS and collect data until X button is pressed.
         while(opModeIsActive() && runCollection){
             if(lastData == null){
-                lastData = new CknData(pidToMeasure.getError(), CknUtil.getCurrentTime());
+                lastData = new CknData<Double>(pidToMeasure.getError(), CknUtil.getCurrentTime());
             }
 
-            currentData = new CknData(pidToMeasure.getError(), CknUtil.getCurrentTime());
+            currentData = new CknData<Double>(pidToMeasure.getError(), CknUtil.getCurrentTime());
 
             data.add(currentData);
 
             // Detect change of sign
-            if((double) lastData.data * (double) currentData.data < 0){
+            if((double) lastData.value * (double) currentData.value < 0){
                 crossesZero[crossCount] = currentData;
                 crossCount++;
                 robot.dashboard.setLine(1, "Cross Count: " + crossCount);
                 robot.dashboard.setLine(crossCount + 2,
-                        "" + currentData.data + " Time:" + currentData.timestamp);
+                        "" + currentData.value + " Time:" + currentData.timestamp);
             }
 
             lastData = currentData;

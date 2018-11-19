@@ -1,7 +1,5 @@
 package chickenados.robotv1;
 
-import com.qualcomm.hardware.bosch.BNO055IMU;
-import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -15,13 +13,17 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 
 import chickenlib.CknDriveBase;
-import chickenlib.CknLocationTracker;
+import chickenlib.inputstreams.CknEncoderInputStream;
+import chickenlib.inputstreams.CknLocationInputStream;
+import chickenlib.location.CknLocationTracker;
 import chickenlib.CknPIDController;
 import chickenlib.CknPIDDrive;
-import chickenlib.CknSmartDashboard;
-import chickenlib.CknTaskManager;
+import chickenlib.opmode.CknRobot;
+import chickenlib.display.CknSmartDashboard;
+import chickenlib.sensor.CknAccelerometer;
+import chickenlib.sensor.CknBNO055IMU;
 
-public class RobotV1 implements CknPIDController.PIDInput{
+public class RobotV1 extends CknRobot {
 
     HardwareMap hwMap;
 
@@ -33,7 +35,7 @@ public class RobotV1 implements CknPIDController.PIDInput{
     public CknPIDController turnPid;
     CknPIDController liftPid;
 
-    BNO055IMU imu;
+    CknBNO055IMU imu;
 
     DcMotor frontLeft;
     DcMotor frontRight;
@@ -105,17 +107,11 @@ public class RobotV1 implements CknPIDController.PIDInput{
         // Initialize sensors
         //
 
-        // IMU
-        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-        parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
-        parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
-        parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
-        parameters.loggingEnabled      = true;
-        parameters.loggingTag          = "IMU";
-        parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
+        // Acclerometer Parameters
+        CknAccelerometer.Parameters aParameters = new CknAccelerometer.Parameters();
+        aParameters.doIntegration = true;
 
-        imu = hwMap.get(BNO055IMU.class, "imu");
-        imu.initialize(parameters);
+        imu = new CknBNO055IMU(hwMap,"imu", aParameters);
 
         //
         // Initialize Drive Train system
@@ -159,8 +155,7 @@ public class RobotV1 implements CknPIDController.PIDInput{
         LTParams.useEncoders = true;
         LTParams.useGyro = true;
 
-        locationTracker = new CknLocationTracker(driveBase, LTParams);
-        locationTracker.setBN055IMU(imu);
+        locationTracker = new CknLocationTracker(driveBase, imu.gyro, imu.accelerometer, LTParams);
         locationTracker.resetLocation();
         locationTracker.setTaskEnabled(true);
 
@@ -175,9 +170,12 @@ public class RobotV1 implements CknPIDController.PIDInput{
 
         yPid = new CknPIDController(new CknPIDController.PIDCoefficients(RobotV1Info.Y_ENCODER_PID_P,
                 RobotV1Info.Y_ENCODER_PID_I, RobotV1Info.Y_ENCODER_PID_D),
-                this, 40);
+                new CknLocationInputStream(locationTracker, CknLocationInputStream.InputType.Y_POSITION),
+                40);
         turnPid = new CknPIDController(new CknPIDController.PIDCoefficients(RobotV1Info.TURN_PID_P,
-                RobotV1Info.TURN_PID_I, RobotV1Info.TURN_PID_D), this, 2, 1);
+                RobotV1Info.TURN_PID_I, RobotV1Info.TURN_PID_D),
+                new CknLocationInputStream(locationTracker, CknLocationInputStream.InputType.HEADING),
+                2, 1);
 
         pidDrive = new CknPIDDrive(driveBase, yPid, turnPid);
 
@@ -186,7 +184,8 @@ public class RobotV1 implements CknPIDController.PIDInput{
         //
 
         liftPid = new CknPIDController(new CknPIDController.PIDCoefficients(RobotV1Info.LIFT_PID_P,
-                RobotV1Info.LIFT_PID_I, RobotV1Info.LIFT_PID_D), this, 20, 0);
+                RobotV1Info.LIFT_PID_I, RobotV1Info.LIFT_PID_D),
+                new CknEncoderInputStream(liftMotor), 20, 0);
         lift = new RobotV1Lift(liftMotor, liftPid);
 
         //
@@ -256,27 +255,5 @@ public class RobotV1 implements CknPIDController.PIDInput{
             tfod.shutdown();
         }
     }
-
-    //
-    // Implements CknPIDController.PidInput
-    //
-
-    /**
-     * Returns inputs for the PID loops
-     * @param pid
-     * @return
-     */
-    public double getInput(CknPIDController pid){
-        if(pid == yPid){
-            return locationTracker.getYPosition();
-        }
-        else if (pid == turnPid){
-            return locationTracker.getHeading();
-        } else if(pid == liftPid){
-            return liftMotor.getCurrentPosition();
-        }
-        return 0.0;
-    }
-
 
 }

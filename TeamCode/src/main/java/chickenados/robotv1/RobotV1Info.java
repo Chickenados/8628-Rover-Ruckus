@@ -34,6 +34,8 @@ public class RobotV1Info {
     public static final double TURN_PID_I = 0.0;
     public static final double TURN_PID_D = 0.0;
 
+    public static final String IMU_NAME = "imu";
+
 
     //
     // Lift Subsystem Constants

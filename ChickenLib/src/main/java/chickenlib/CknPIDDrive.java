@@ -1,5 +1,8 @@
 package chickenlib;
 
+import chickenlib.util.CknEvent;
+import chickenlib.util.CknUtil;
+
 public class CknPIDDrive implements CknTaskManager.Task{
 
     CknDriveBase driveBase;
@@ -100,9 +103,7 @@ public class CknPIDDrive implements CknTaskManager.Task{
             CknTaskManager.getInstance().unregisterTask(this, CknTaskManager.TaskType.POSTCONTINUOUS);
         }
     }
-
-    //Call this method every loop possible
-    // Call this in precontinuous
+    
     @Override
     public void preContinuous(){
 
@@ -112,7 +113,6 @@ public class CknPIDDrive implements CknTaskManager.Task{
     public void postContinuous(){
         double leftPower, rightPower;
 
-        //TODO: Test Gyro assistance and turn support
         leftPower = yPid.getOutput() + turnPid.getOutput();
         rightPower = yPid.getOutput() - turnPid.getOutput();
 

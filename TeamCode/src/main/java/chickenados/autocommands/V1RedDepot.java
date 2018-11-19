@@ -5,10 +5,10 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import chickenados.robotv1.RobotV1;
 import chickenados.robotv1.RobotV1VisionAnalyzer;
-import chickenlib.CknEvent;
+import chickenlib.util.CknEvent;
 import chickenlib.CknStateMachine;
 import chickenlib.CknTaskManager;
-import chickenlib.CknUtil;
+import chickenlib.util.CknUtil;
 
 @Autonomous(name = "V1 Red Depot")
 public class V1RedDepot extends LinearOpMode{
@@ -160,7 +160,7 @@ public class V1RedDepot extends LinearOpMode{
                                 || goldState == RobotV1VisionAnalyzer.GoldState.CENTER) {
                             robot.pidDrive.driveDistanceTank(-75, 0, 4, event);
                         } else {
-                            angleToMaintain = robot.locationTracker.getHeading();
+                            angleToMaintain = robot.locationTracker.getLocation().heading;
                             if(goldState == RobotV1VisionAnalyzer.GoldState.LEFT){
                                 robot.pidDrive.driveDistanceTank(-40, angleToMaintain, 4, event);
                             } else {

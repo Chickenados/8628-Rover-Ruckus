@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import chickenlib.CknSmartDashboard;
+import chickenlib.display.CknSmartDashboard;
 
 @Autonomous(name = "RobotV1 Full Auto")
 @Disabled

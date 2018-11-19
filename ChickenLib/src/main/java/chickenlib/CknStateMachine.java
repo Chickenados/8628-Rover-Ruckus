@@ -2,6 +2,8 @@ package chickenlib;
 
 import java.util.ArrayList;
 
+import chickenlib.util.CknEvent;
+
 public class CknStateMachine<T> {
 
     private ArrayList<T> stateList;

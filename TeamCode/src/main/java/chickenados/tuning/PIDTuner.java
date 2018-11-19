@@ -5,10 +5,10 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import chickenados.robotv1.RobotV1;
 import chickenados.robotv1.RobotV1Info;
-import chickenlib.CknEvent;
+import chickenlib.util.CknEvent;
 import chickenlib.CknPIDController;
 import chickenlib.CknStateMachine;
-import chickenlib.CknUtil;
+import chickenlib.util.CknUtil;
 
 @TeleOp(name = "PID Tuner")
 public class PIDTuner extends LinearOpMode {

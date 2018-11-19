@@ -2,9 +2,8 @@ package chickenados.robotv1;
 
 import com.qualcomm.robotcore.hardware.Servo;
 
-import chickenlib.CknEvent;
-import chickenlib.CknStopwatch;
-import chickenlib.CknTaskManager;
+import chickenlib.util.CknEvent;
+import chickenlib.util.CknStopwatch;
 
 public class RobotV1Dropper{
 
