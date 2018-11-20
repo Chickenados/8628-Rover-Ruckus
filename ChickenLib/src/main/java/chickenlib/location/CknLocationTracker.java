@@ -42,12 +42,7 @@ public class CknLocationTracker implements CknTaskManager.Task {
         this.params = params;
         this.gyro = gyro;
         this.accelerometer = accelerometer;
-    }
-
-    public CknLocationTracker(CknDriveBase driveBase, Parameters params){
-        params.useAccelerometer = false;
-        params.useGyro = false;
-        this.params = params;
+        this.location = new CknLocation(0.0, 0.0, 0.0, 0.0);
     }
 
     public void resetLocation(){

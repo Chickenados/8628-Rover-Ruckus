@@ -63,7 +63,7 @@ public class ChickenTeleOp extends LinearOpMode {
             } else {
                 robot.liftMotor.setPower(LIFT_NULL_SPEED);
             }
-            robot.dashboard.setLine(3, "Lift power" + robot.liftMotor.getPower());
+            //robot.dashboard.setLine(3, "Lift power" + robot.liftMotor.getPower());
 
             if (gamepad2.left_trigger > 0.3) {
                 robot.liftMotor.setPower(LIFT_UP_SPEED);
@@ -73,7 +73,7 @@ public class ChickenTeleOp extends LinearOpMode {
                 robot.liftMotor.setPower(LIFT_NULL_SPEED);
             }
 
-            robot.dashboard.setLine( 4, "Lift Power" + robot.liftMotor.getPower());
+            //robot.dashboard.setLine( 4, "Lift Power" + robot.liftMotor.getPower());
 
 
 
@@ -121,8 +121,8 @@ public class ChickenTeleOp extends LinearOpMode {
                 robot.driveBase.setMode(CknDriveBase.DriveType.ARCADE);
 
             // Display robot info to the dashboard
-            robot.dashboard.setLine(1, "Drive Mode: " + robot.driveBase.getMode());
-            robot.dashboard.setLine(2, "Speed: " + robot.driveBase.getSpeed());
+            //robot.dashboard.setLine(1, "Drive Mode: " + robot.driveBase.getMode());
+            //robot.dashboard.setLine(2, "Speed: " + robot.driveBase.getSpeed());
 
             mgr.executeTasks(CknTaskManager.TaskType.POSTCONTINUOUS);
         }

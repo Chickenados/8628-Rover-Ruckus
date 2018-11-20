@@ -10,7 +10,6 @@ public class CknPIDDrive implements CknTaskManager.Task{
     CknPIDController turnPid;
     CknEvent event;
 
-    private boolean isActive = false;
     double startTime;
     double timeout;
 

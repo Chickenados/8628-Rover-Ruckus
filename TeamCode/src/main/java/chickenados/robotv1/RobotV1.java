@@ -52,7 +52,7 @@ public class RobotV1 extends CknRobot {
 
     public CknSmartDashboard dashboard;
 
-    //Vuforia Variabeles
+    //Vuforia Variables
     private static final String TFOD_MODEL_ASSET = "RoverRuckus.tflite";
     private static final String LABEL_GOLD_MINERAL = "Gold Mineral";
     private static final String LABEL_SILVER_MINERAL = "Silver Mineral";
@@ -124,6 +124,7 @@ public class RobotV1 extends CknRobot {
 
         // Initialize any other motor
         liftMotor = hwMap.dcMotor.get(RobotV1Info.LIFT_MOTOR_NAME);
+        liftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         liftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
@@ -162,7 +163,9 @@ public class RobotV1 extends CknRobot {
         //
         // Initialize SmartDashboard system
         //
-        dashboard = CknSmartDashboard.createInstance(telemetry, 32);
+        CknSmartDashboard.Parameters dashParams = new CknSmartDashboard.Parameters();
+        dashParams.displayWidth = 400;
+        dashboard = CknSmartDashboard.createInstance(telemetry, dashParams);
 
         //
         // PID Drive systems
