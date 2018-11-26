@@ -2,7 +2,7 @@ package chickenlib.inputstreams;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-public class CknEncoderInputStream extends CknInputStream<Integer>{
+public class CknEncoderInputStream extends CknInputStream{
 
     DcMotor motor;
 
@@ -11,7 +11,7 @@ public class CknEncoderInputStream extends CknInputStream<Integer>{
     }
 
     @Override
-    public Integer getInput(){
+    public Object getInput(){
         return motor.getCurrentPosition();
     }
 }

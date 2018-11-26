@@ -39,7 +39,7 @@ public class ChickenTeleOp extends LinearOpMode {
 
 
         robot = new RobotV1(hardwareMap, telemetry);
-        robot.driveBase.setMode(CknDriveBase.DriveType.TANK);
+        robot.driveBase.setMode(CknDriveBase.DriveType.ARCADE);
 
         grabber = hardwareMap.get(CRServo.class, "grabber");
         dropper = hardwareMap.get(Servo.class, "dropper");
