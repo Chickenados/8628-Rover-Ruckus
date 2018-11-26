@@ -12,6 +12,6 @@ public class CknEncoderInputStream extends CknInputStream{
 
     @Override
     public Object getInput(){
-        return motor.getCurrentPosition();
+        return (double) motor.getCurrentPosition();
     }
 }

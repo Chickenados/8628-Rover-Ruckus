@@ -117,8 +117,7 @@ public class RobotV1Lift implements CknTaskManager.Task{
     @Override
     public void postContinuous(){
             liftPosition = liftMotor.getCurrentPosition();
-
-            // TODO: Incorporate lift power.
+            
             double motorPower = liftPid.getOutput();
 
             liftMotor.setPower(Range.clip(motorPower, -1.0, 1.0));
