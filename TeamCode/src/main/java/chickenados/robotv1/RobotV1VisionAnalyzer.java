@@ -31,11 +31,11 @@ public class RobotV1VisionAnalyzer {
                 //Iterate through each instance in the list and gather it's location
                 for(Recognition rec : objects){
                     if(rec.getLabel().equals(Gold_Label)){
-                        goldX = (int) rec.getLeft();
+                        goldX = Math.round(rec.getLeft());
                     } else if(silver1X == -1){
-                        silver1X = (int) rec.getLeft();
+                        silver1X = Math.round(rec.getLeft());
                     } else {
-                        silver2X = (int) rec.getLeft();
+                        silver2X = Math.round(rec.getLeft());
                     }
 
                     if(goldX < silver1X && goldX < silver2X){
@@ -52,9 +52,9 @@ public class RobotV1VisionAnalyzer {
 
                 for(Recognition rec : objects){
                     if(rec.getLabel().equals(Gold_Label)){
-                        goldX = (int) rec.getLeft();
+                        goldX = Math.round(rec.getLeft());
                     } else {
-                        silverX = (int) rec.getLeft();
+                        silverX = Math.round(rec.getLeft());
                     }
                 }
 
