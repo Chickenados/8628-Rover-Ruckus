@@ -9,7 +9,7 @@ import chickenlib.CknEvent;
 import chickenlib.CknStateMachine;
 import chickenlib.CknUtil;
 
-@Autonomous(name = "V1 Red Depot")
+@Autonomous(name = "V1 Depot ")
 public class V1RedDepot extends LinearOpMode{
 
     enum State{

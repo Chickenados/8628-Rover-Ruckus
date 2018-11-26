@@ -9,7 +9,7 @@ import chickenlib.CknEvent;
 import chickenlib.CknStateMachine;
 import chickenlib.CknUtil;
 
-@Autonomous(name = "V1 Red Depot Other Crater")
+@Autonomous(name = "V1 Depot Oppo Crater")
 public class V1RedDepotOtherCrater extends LinearOpMode{
 
     enum State{
@@ -190,14 +190,22 @@ public class V1RedDepotOtherCrater extends LinearOpMode{
                     case LINE_UP_FOR_CRATER:
                         event.reset();
 
-                        robot.pidDrive.driveDistanceTank(0, 50, 2.5, event);
+                        if (goldState == RobotV1VisionAnalyzer.GoldState.UNKNOWN ||
+                                goldState == RobotV1VisionAnalyzer.GoldState.CENTER) {
+                            robot.pidDrive.driveDistanceTank(0,135, 2.5, event);
+                        } else if(goldState == RobotV1VisionAnalyzer.GoldState.LEFT){
+                            robot.pidDrive.driveDistanceTank(-20,45,2.5, event);
+                            robot.pidDrive.driveDistanceTank(-40, 135, 4, event);
+                        } else {
+                            robot.pidDrive.driveDistanceTank(-37, 135, 4, event);
+                        }
 
                         sm.waitForEvent(event, State.DRIVE_TO_CRATER);
                         break;
                     case DRIVE_TO_CRATER:
                         event.reset();
 
-                        robot.pidDrive.driveDistanceTank(90, 48, 2.5,event);
+                        robot.pidDrive.driveDistanceTank(-90, 135, 2.5,event);
 
                         sm.waitForEvent(event, State.END);
                         break;
