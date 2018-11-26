@@ -5,13 +5,15 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import chickenados.robotv1.RobotV1;
 import chickenados.robotv1.RobotV1VisionAnalyzer;
-import chickenlib.CknEvent;
+import chickenlib.util.CknEvent;
 import chickenlib.CknStateMachine;
-import chickenlib.CknUtil;
+import chickenlib.CknTaskManager;
+import chickenlib.util.CknUtil;
 
 @Autonomous(name = "V1 Depot Oppo Crater")
 public class V1RedDepotOtherCrater extends LinearOpMode{
 
+    CknTaskManager mgr = new CknTaskManager();
     enum State{
         SCAN_MINERALS,
         LOWER_LIFT,
@@ -66,7 +68,7 @@ public class V1RedDepotOtherCrater extends LinearOpMode{
 
         while(opModeIsActive()) {
 
-            robot.preContinuous();
+            mgr.executeTasks(CknTaskManager.TaskType.PRECONTINUOUS);
 
             robot.dashboard.setLine(1, "State: " + currentState);
             robot.dashboard.setLine(2, "Event: " + event.isTriggered());
@@ -157,7 +159,7 @@ public class V1RedDepotOtherCrater extends LinearOpMode{
                                 || goldState == RobotV1VisionAnalyzer.GoldState.CENTER) {
                             robot.pidDrive.driveDistanceTank(-75, 0, 4, event);
                         } else {
-                            angleToMaintain = robot.locationTracker.getHeading();
+                            angleToMaintain = robot.locationTracker.getLocation().heading;
                             if(goldState == RobotV1VisionAnalyzer.GoldState.LEFT){
                                 robot.pidDrive.driveDistanceTank(-40, angleToMaintain, 4, event);
                             } else {
