@@ -10,11 +10,10 @@ import chickenlib.CknStateMachine;
 import chickenlib.CknTaskManager;
 import chickenlib.util.CknUtil;
 
-@Autonomous(name = "V1 Depot ")
-public class V1RedDepot extends LinearOpMode{
+@Autonomous(name = "V1 Depot Oppo Crater")
+public class V1RedDepotOtherCrater extends LinearOpMode{
 
     CknTaskManager mgr = new CknTaskManager();
-
     enum State{
         SCAN_MINERALS,
         LOWER_LIFT,
@@ -68,8 +67,7 @@ public class V1RedDepot extends LinearOpMode{
         waitForStart();
 
         while(opModeIsActive()) {
-            CknUtil.CknLoopCounter.getInstance().loop++;
-            // Execute precontinuous tasks at the beginning of the loop.
+
             mgr.executeTasks(CknTaskManager.TaskType.PRECONTINUOUS);
 
             robot.dashboard.setLine(1, "State: " + currentState);
@@ -190,24 +188,26 @@ public class V1RedDepot extends LinearOpMode{
 
                         robot.dropper.reset(event);
 
-                        // End the program if it detected left since the robot hits the mineral.
-                        if(goldState != RobotV1VisionAnalyzer.GoldState.LEFT){
-                            sm.waitForEvent(event, State.LINE_UP_FOR_CRATER);
-                        } else {
-                            sm.waitForEvent(event, State.END);
-                        }
                         break;
                     case LINE_UP_FOR_CRATER:
                         event.reset();
 
-                        robot.pidDrive.driveDistanceTank(0, 50, 2.5, event);
+                        if (goldState == RobotV1VisionAnalyzer.GoldState.UNKNOWN ||
+                                goldState == RobotV1VisionAnalyzer.GoldState.CENTER) {
+                            robot.pidDrive.driveDistanceTank(0,135, 2.5, event);
+                        } else if(goldState == RobotV1VisionAnalyzer.GoldState.LEFT){
+                            robot.pidDrive.driveDistanceTank(-20,45,2.5, event);
+                            robot.pidDrive.driveDistanceTank(-40, 135, 4, event);
+                        } else {
+                            robot.pidDrive.driveDistanceTank(-37, 135, 4, event);
+                        }
 
                         sm.waitForEvent(event, State.DRIVE_TO_CRATER);
                         break;
                     case DRIVE_TO_CRATER:
                         event.reset();
 
-                        robot.pidDrive.driveDistanceTank(90, 48, 2.5,event);
+                        robot.pidDrive.driveDistanceTank(-90, 135, 2.5,event);
 
                         sm.waitForEvent(event, State.END);
                         break;
@@ -219,9 +219,6 @@ public class V1RedDepot extends LinearOpMode{
 
 
             }
-
-            // Execute all postcontinuous tasks at the end of the loop.
-            mgr.executeTasks(CknTaskManager.TaskType.POSTCONTINUOUS);
         }
 
 
