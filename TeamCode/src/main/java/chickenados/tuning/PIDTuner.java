@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import chickenados.robotv1.RobotV1;
 import chickenados.robotv1.RobotV1Info;
+import chickenlib.CknTaskManager;
 import chickenlib.util.CknEvent;
 import chickenlib.CknPIDController;
 import chickenlib.CknStateMachine;
@@ -24,6 +25,7 @@ public class PIDTuner extends LinearOpMode {
     CknStateMachine<State> sm = new CknStateMachine<>();
     CknEvent event = new CknEvent();
     State currState;
+    CknTaskManager mgr = new CknTaskManager();
 
     PIDType currentPid = PIDType.DRIVE;
 
@@ -60,6 +62,8 @@ public class PIDTuner extends LinearOpMode {
         sm.start(PIDTuner.State.IDLE);
 
         while(opModeIsActive()){
+
+            mgr.executeTasks(CknTaskManager.TaskType.PRECONTINUOUS);
 
             if(currentPid == PIDType.TURN){
                 robot.turnPid.printPIDValues();
@@ -201,7 +205,7 @@ public class PIDTuner extends LinearOpMode {
                 if(gamepad1.dpad_left && leftReleased){
                     leftReleased = false;
                     incrementScale = incrementScale * 10;
-                    incrementScale = CknUtil.round(incrementScale, ROUND_PLACES);
+                    //incrementScale = CknUtil.round(incrementScale, ROUND_PLACES);
                 }
                 if(!gamepad1.dpad_left && !leftReleased){
                     leftReleased = true;
@@ -247,8 +251,8 @@ public class PIDTuner extends LinearOpMode {
 
             }
 
+            mgr.executeTasks(CknTaskManager.TaskType.POSTCONTINUOUS);
         }
-
 
     }
 }

@@ -26,10 +26,6 @@ public class CknLocationTracker implements CknTaskManager.Task {
 
     private Parameters params;
 
-    //locations
-    private double xPos = 0.0;
-    private double yPos = 0.0;
-    private double heading = 0.0;
     CknLocation location;
 
     //Drive base is for accessing motor encoders.
@@ -54,11 +50,6 @@ public class CknLocationTracker implements CknTaskManager.Task {
         if(params.useEncoders){
             driveBase.resetEncoders();
         }
-    }
-
-    //TODO: Temporary method
-    public void setHeading(double heading){
-        this.heading = heading;
     }
 
     //
@@ -95,13 +86,14 @@ public class CknLocationTracker implements CknTaskManager.Task {
 
                     //Average out the two values from both sides, this isn't a real
                     // y position, just the distance the robot travels.
-                    yPos = (leftEncoder + rightEncoder) / 2;
+                    double yPos = (leftEncoder + rightEncoder) / 2;
                     // Convert to inches
                     yPos = yPos / ((((3.1415 * driveBase.getWheelDiameter())) / driveBase.getTicksPerRev()) * driveBase.getGearRatio());
                     // Convert to other unit if needed.
                     if(params.positionUnit != INCHES){
                         yPos = CknUnitConverter.getInstance().convertValue(INCHES, params.positionUnit, yPos);
                     }
+                    location.y = yPos;
 
                 }
                 else if(numMotors == 4){
@@ -111,10 +103,10 @@ public class CknLocationTracker implements CknTaskManager.Task {
                     double enc3 = driveBase.getEncoderValue(CknDriveBase.MotorType.REAR_LEFT);
                     double enc4 = driveBase.getEncoderValue(CknDriveBase.MotorType.REAR_RIGHT);
 
-                    yPos = (enc1 + enc2 + enc3 + enc4) / 4;
+                    location.y = (enc1 + enc2 + enc3 + enc4) / 4;
 
                     if(driveBase.getMode() == CknDriveBase.DriveType.MECANUM) {
-                        xPos = ((enc1 + enc4) - (enc2 + enc3)) / 4;
+                        location.x = ((enc1 + enc4) - (enc2 + enc3)) / 4;
                     }
                 }
                 else
@@ -128,7 +120,7 @@ public class CknLocationTracker implements CknTaskManager.Task {
 
         if(params.useGyro){
             if(gyro != null){
-                heading = gyro.getData(0, CknGyro.DataType.HEADING).value;
+                location.heading = gyro.getData(0, CknGyro.DataType.HEADING).value;
             }
         }
     }

@@ -165,6 +165,7 @@ public class RobotV1 extends CknRobot {
         //
         CknSmartDashboard.Parameters dashParams = new CknSmartDashboard.Parameters();
         dashParams.displayWidth = 400;
+        dashParams.numLines = 32;
         dashboard = CknSmartDashboard.createInstance(telemetry, dashParams);
 
         //

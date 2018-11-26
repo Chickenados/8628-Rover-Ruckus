@@ -62,6 +62,7 @@ public class CknSmartDashboard implements CknTaskManager.Task {
     public CknSmartDashboard(Telemetry telemetry, Parameters params){
         this.params = params;
         this.numLines = params.numLines;
+        this.display = new Telemetry.Item[numLines];
 
         // Turns off autoClear and creates a blank dashboard.
         this.telemetry = telemetry;
@@ -69,7 +70,7 @@ public class CknSmartDashboard implements CknTaskManager.Task {
         telemetry.clearAll();
 
         for(int i = 0; i < numLines; i++){
-            display[i] = telemetry.addData(i + ":", "");
+            display[i] = telemetry.addData(i +"", "");
         }
         telemetry.update();
     }
@@ -79,6 +80,7 @@ public class CknSmartDashboard implements CknTaskManager.Task {
             throw new IllegalArgumentException("Invalid line number!");
         }
         display[lineNum].setValue(text);
+        telemetry.update();
     }
 
     public void clearDisplay(){
@@ -114,7 +116,7 @@ public class CknSmartDashboard implements CknTaskManager.Task {
     public void preContinuous(){
         // Update the display as close to a constant rate as possible, as specified in the parameters.
         if(CknUtil.getCurrentTime() - prevTime > params.updateRateMS){
-            
+
         }
     }
 
