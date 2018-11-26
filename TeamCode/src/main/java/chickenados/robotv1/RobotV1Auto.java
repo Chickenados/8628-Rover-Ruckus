@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import chickenlib.CknSmartDashboard;
+import chickenlib.display.CknSmartDashboard;
 
 @Autonomous(name = "RobotV1 Full Auto")
 @Disabled
@@ -73,7 +73,6 @@ public class RobotV1Auto extends LinearOpMode{
         waitForStart();
 
         while(opModeIsActive()){
-            robot.preContinuous();
 
             switch (currentAuto){
                 case RED_DEPOT:

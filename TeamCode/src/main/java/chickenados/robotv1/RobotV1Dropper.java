@@ -2,10 +2,10 @@ package chickenados.robotv1;
 
 import com.qualcomm.robotcore.hardware.Servo;
 
-import chickenlib.CknEvent;
-import chickenlib.CknStopwatch;
+import chickenlib.util.CknEvent;
+import chickenlib.util.CknStopwatch;
 
-public class RobotV1Dropper {
+public class RobotV1Dropper{
 
     Servo dropperServo;
     private CknStopwatch stopwatch;
@@ -34,9 +34,4 @@ public class RobotV1Dropper {
         reset(null);
     }
 
-    public void handleDropper(){
-        if(stopwatch != null){
-            stopwatch.handleStopwatch();
-        }
-    }
 }

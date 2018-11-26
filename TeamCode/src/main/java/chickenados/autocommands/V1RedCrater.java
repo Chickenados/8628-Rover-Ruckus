@@ -5,8 +5,9 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import chickenados.robotv1.RobotV1;
-import chickenlib.CknEvent;
+import chickenlib.util.CknEvent;
 import chickenlib.CknStateMachine;
+import chickenlib.CknTaskManager;
 
 @Autonomous(name = "V1 Red Crater")
 @Disabled
@@ -34,6 +35,8 @@ public class V1RedCrater extends LinearOpMode{
 
     // END AUTONOMOUS CONSTANTS
 
+    CknTaskManager mgr = new CknTaskManager();
+
     CknStateMachine<State> sm = new CknStateMachine<>();
     CknEvent event = new CknEvent();
 
@@ -51,8 +54,7 @@ public class V1RedCrater extends LinearOpMode{
         waitForStart();
 
         while(opModeIsActive()) {
-
-            robot.preContinuous();
+            mgr.executeTasks(CknTaskManager.TaskType.PRECONTINUOUS);
 
             robot.dashboard.setLine(1, "State: " + currentState);
             robot.dashboard.setLine(2, "Event: " + event.isTriggered());
@@ -166,6 +168,8 @@ public class V1RedCrater extends LinearOpMode{
 
 
             }
+
+            mgr.executeTasks(CknTaskManager.TaskType.POSTCONTINUOUS);
         }
 
 

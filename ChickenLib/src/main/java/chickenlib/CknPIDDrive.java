@@ -1,13 +1,15 @@
 package chickenlib;
 
-public class CknPIDDrive {
+import chickenlib.util.CknEvent;
+import chickenlib.util.CknUtil;
+
+public class CknPIDDrive implements CknTaskManager.Task{
 
     CknDriveBase driveBase;
     CknPIDController yPid;
     CknPIDController turnPid;
     CknEvent event;
 
-    private boolean isActive = false;
     double startTime;
     double timeout;
 
@@ -27,7 +29,7 @@ public class CknPIDDrive {
         double startTime = CknUtil.getCurrentTime();
 
         //Convert the distance from inches to encoder ticks.
-        double target = distance / ((3.1415 * driveBase.diameter) / driveBase.ticksPerRev);
+        double target = distance / ((3.1415 * driveBase.getWheelDiameter()) / driveBase.getTicksPerRev());
 
         yPid.setSetPoint(target, true);
         //turnPid.setSetPoint(heading);
@@ -62,12 +64,12 @@ public class CknPIDDrive {
         startTime = CknUtil.getCurrentTime();
 
         //Convert the distance from inches to encoder ticks.
-        double target = distance / ((((3.1415 * driveBase.diameter)) / driveBase.ticksPerRev) * driveBase.getGearRatio());
+        double target = distance / ((((3.1415 * driveBase.getWheelDiameter())) / driveBase.getTicksPerRev()) * driveBase.getGearRatio());
 
         yPid.setSetPoint(target, true);
         turnPid.setSetPoint(heading, false);
 
-        isActive = true;
+        setTaskEnabled(true);
 
     }
 
@@ -80,6 +82,9 @@ public class CknPIDDrive {
     }
 
     public void stop(){
+
+        setTaskEnabled(false);
+
         if(turnPid != null){
             turnPid.reset();
         }
@@ -90,33 +95,35 @@ public class CknPIDDrive {
         driveBase.stopMotors();
     }
 
-
-    //Call this method every loop possible
-    // Call this in precontinuous
-    public void handlePIDs(){
-        if(isActive){
-
-            double leftPower, rightPower;
-
-            //TODO: Test Gyro assistance and turn support
-            leftPower = yPid.getOutput() + turnPid.getOutput();
-            rightPower = yPid.getOutput() - turnPid.getOutput();
-
-            //CknSmartDashboard.getInstance().setLine(7, "Out: " + turnPid.getOutput());
-
-            driveBase.tankDrive(leftPower, rightPower);
-
-            //Check if the robot has reached the target or timed out
-            if((yPid.onTarget() && turnPid.onTarget()) || CknUtil.getCurrentTime() > startTime + timeout){
-                isActive = false;
-                stop();
-                if(event != null){
-                    event.set(true);
-                }
-            }
-
+    public void setTaskEnabled(boolean enabled){
+        if(enabled) {
+            CknTaskManager.getInstance().registerTask(this, CknTaskManager.TaskType.POSTCONTINUOUS);
+        } else {
+            CknTaskManager.getInstance().unregisterTask(this, CknTaskManager.TaskType.POSTCONTINUOUS);
         }
+    }
+    
+    @Override
+    public void preContinuous(){
 
+    }
+
+    @Override
+    public void postContinuous(){
+        double leftPower, rightPower;
+
+        leftPower = yPid.getOutput() + turnPid.getOutput();
+        rightPower = yPid.getOutput() - turnPid.getOutput();
+
+        driveBase.tankDrive(leftPower, rightPower);
+
+        //Check if the robot has reached the target or timed out
+        if((yPid.onTarget() && turnPid.onTarget()) || CknUtil.getCurrentTime() > startTime + timeout) {
+            stop();
+            if (event != null) {
+                event.set(true);
+            }
+        }
 
     }
 

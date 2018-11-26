@@ -34,6 +34,8 @@ public class RobotV1Info {
     public static final double TURN_PID_I = 0.0;
     public static final double TURN_PID_D = 0.0;
 
+    public static final String IMU_NAME = "imu";
+
 
     //
     // Lift Subsystem Constants
@@ -52,12 +54,25 @@ public class RobotV1Info {
     public static final double LIFT_PID_D = 0.0;
 
     //
+    // Collector Subsystem Constants
+    //
+
+    public static final String COLLECTOR_NAME = "collector";
+
+    //
     // Dropper Subsystem Constants
     //
 
     public static final String DROPPER_NAME = "dropper";
     public static final int DROP_POSITION = 70;
     public static final int DROP_RESET_POSITION = 0;
+
+    //
+    // Ball Scorer Subsystem
+    //
+
+    public static final String REACH_MOTOR_NAME = "reacher";
+    public static final String PIVOT_MOTOR_NAME = "pivot";
 
     // Webcam
     public static final String WEBCAME_NAME = "Webcam";

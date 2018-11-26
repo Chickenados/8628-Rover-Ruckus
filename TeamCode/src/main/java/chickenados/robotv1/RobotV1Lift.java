@@ -3,11 +3,12 @@ package chickenados.robotv1;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
 
-import chickenlib.CknEvent;
+import chickenlib.util.CknEvent;
 import chickenlib.CknPIDController;
-import chickenlib.CknUtil;
+import chickenlib.CknTaskManager;
+import chickenlib.util.CknUtil;
 
-public class RobotV1Lift {
+public class RobotV1Lift implements CknTaskManager.Task{
 
     //TODO: Incorporate Timeouts.
 
@@ -17,7 +18,7 @@ public class RobotV1Lift {
         UNKNOWN;
     }
 
-    double liftPosition = 0.0;
+    double liftPosition;
 
     LiftState currentState = LiftState.UNKNOWN;
     LiftState targetState = LiftState.UNKNOWN;
@@ -28,13 +29,10 @@ public class RobotV1Lift {
 
     CknEvent event;
 
-    boolean active;
-
     public RobotV1Lift(DcMotor liftMotor, CknPIDController liftPid){
         this.liftMotor = liftMotor;
         this.liftPid = liftPid;
         this.liftPosition = liftMotor.getCurrentPosition();
-        active = false;
     }
 
     /**
@@ -44,11 +42,11 @@ public class RobotV1Lift {
     public void raiseLift(CknEvent event, double timeout){
         this.timeout = timeout;
         startTime = CknUtil.getCurrentTime();
-        active = true;
         liftPid.setSetPoint(RobotV1Info.RAISED_ENCODER_COUNT, false);
         currentState = LiftState.UNKNOWN;
         targetState = LiftState.RAISED;
         this.event = event;
+        setTaskEnabled(true);
     }
 
     public void raiseLift(double timeout){
@@ -62,11 +60,11 @@ public class RobotV1Lift {
     public void lowerLift(CknEvent event, double timeout){
         startTime = CknUtil.getCurrentTime();
         this.timeout = timeout;
-        active = true;
         liftPid.setSetPoint(RobotV1Info.LOWERED_ENCODER_COUNT, false);
         currentState = LiftState.UNKNOWN;
         targetState = LiftState.LOWERED;
         this.event = event;
+        setTaskEnabled(true);
     }
 
     public void lowerLift(double timeout){
@@ -92,7 +90,7 @@ public class RobotV1Lift {
     }
 
     public void stop(){
-        active = false;
+        setTaskEnabled(false);
         liftMotor.setPower(0);
         liftPid.reset();
         currentState = targetState;
@@ -102,20 +100,31 @@ public class RobotV1Lift {
         }
     }
 
-    // Call this method every loop possibke
-    public void handlePids(){
-        if(active){
+    public void setTaskEnabled(boolean enabled){
+        if(enabled){
+            CknTaskManager.getInstance().registerTask(this, CknTaskManager.TaskType.POSTCONTINUOUS);
+        } else {
+            CknTaskManager.getInstance().unregisterTask(this, CknTaskManager.TaskType.POSTCONTINUOUS);
+        }
+    }
 
+    @Override
+    public void preContinuous(){
+
+    }
+
+    // Call this method every loop possible
+    @Override
+    public void postContinuous(){
             liftPosition = liftMotor.getCurrentPosition();
 
             // TODO: Incorporate lift power.
             double motorPower = liftPid.getOutput();
 
             liftMotor.setPower(Range.clip(motorPower, -1.0, 1.0));
-
             if(liftPid.onTarget() || CknUtil.getCurrentTime() > startTime + timeout){
                 stop();
             }
-        }
+
     }
 }
