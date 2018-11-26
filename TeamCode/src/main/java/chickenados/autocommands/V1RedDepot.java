@@ -68,6 +68,7 @@ public class V1RedDepot extends LinearOpMode{
         waitForStart();
 
         while(opModeIsActive()) {
+            CknUtil.CknLoopCounter.getInstance().loop++;
             // Execute precontinuous tasks at the beginning of the loop.
             mgr.executeTasks(CknTaskManager.TaskType.PRECONTINUOUS);
 

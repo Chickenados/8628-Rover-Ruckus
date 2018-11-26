@@ -62,7 +62,7 @@ public class PIDTuner extends LinearOpMode {
         sm.start(PIDTuner.State.IDLE);
 
         while(opModeIsActive()){
-
+            CknUtil.CknLoopCounter.getInstance().loop++;
             mgr.executeTasks(CknTaskManager.TaskType.PRECONTINUOUS);
 
             if(currentPid == PIDType.TURN){
@@ -71,8 +71,11 @@ public class PIDTuner extends LinearOpMode {
                 robot.yPid.printPIDValues();
             }
 
-            if(gamepad1.right_bumper && currState == State.DRIVE_FORWARD) event.set(true);
-
+            if(gamepad1.right_bumper && currState == State.DRIVE_FORWARD) {
+                robot.yPid.reset();
+                robot.turnPid.reset();
+                currState = State.IDLE;
+            }
             robot.dashboard.setLine(0, "State: " + currState);
 
             if(sm.isReady()){
@@ -211,12 +214,12 @@ public class PIDTuner extends LinearOpMode {
                     leftReleased = true;
                 }
 
-                if(gamepad1.left_bumper && leftReleased){
-                    leftReleased = false;
+                if(gamepad1.left_bumper && leftBumperReleased){
+                    leftBumperReleased = false;
                     currState = State.TANK;
                 }
-                if(!gamepad1.left_bumper && !leftReleased){
-                    leftReleased = true;
+                if(!gamepad1.left_bumper && !leftBumperReleased){
+                    leftBumperReleased = true;
                 }
 
                 //
@@ -241,12 +244,12 @@ public class PIDTuner extends LinearOpMode {
 
                 robot.driveBase.tankDrive(gamepad1.left_stick_y, gamepad1.right_stick_y);
 
-                if(gamepad1.left_bumper && leftReleased){
-                    leftReleased = false;
+                if(gamepad1.left_bumper && leftBumperReleased){
+                    leftBumperReleased = false;
                     currState = State.IDLE;
                 }
-                if(!gamepad1.left_bumper && !leftReleased){
-                    leftReleased = true;
+                if(!gamepad1.left_bumper && !leftBumperReleased){
+                    leftBumperReleased = true;
                 }
 
             }

@@ -8,6 +8,7 @@ import chickenados.robotv1.RobotV1;
 import chickenlib.util.CknEvent;
 import chickenlib.CknStateMachine;
 import chickenlib.CknTaskManager;
+import chickenlib.util.CknUtil;
 
 @Autonomous(name = "V1 Red Crater")
 @Disabled
@@ -54,6 +55,7 @@ public class V1RedCrater extends LinearOpMode{
         waitForStart();
 
         while(opModeIsActive()) {
+            CknUtil.CknLoopCounter.getInstance().loop++;
             mgr.executeTasks(CknTaskManager.TaskType.PRECONTINUOUS);
 
             robot.dashboard.setLine(1, "State: " + currentState);

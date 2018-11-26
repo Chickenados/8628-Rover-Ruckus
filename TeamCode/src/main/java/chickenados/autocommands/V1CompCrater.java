@@ -62,6 +62,7 @@ public class V1CompCrater extends LinearOpMode{
         waitForStart();
 
         while(opModeIsActive()) {
+            CknUtil.CknLoopCounter.getInstance().loop++;
             mgr.executeTasks(CknTaskManager.TaskType.PRECONTINUOUS);
 
             robot.dashboard.setLine(1, "State: " + currentState);

@@ -113,11 +113,10 @@ public class RobotV1Lift implements CknTaskManager.Task{
 
     }
 
-    // Call this method every loop possible
     @Override
     public void postContinuous(){
             liftPosition = liftMotor.getCurrentPosition();
-            
+
             double motorPower = liftPid.getOutput();
 
             liftMotor.setPower(Range.clip(motorPower, -1.0, 1.0));
