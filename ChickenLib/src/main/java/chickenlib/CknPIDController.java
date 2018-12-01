@@ -14,6 +14,16 @@ public class CknPIDController {
     private double deltaTime;
     private double deltaError;
 
+    public static class Parameters {
+        double minOutput = -1.0;
+        double maxOutput = 1.0;
+        double minDeadband = -1.0;
+        double maxDeadband = 1.0;
+        boolean allowOscillation = false;
+        double threshold = 1.0;
+        double settlingTimeThreshold = 1.0;
+    }
+
     // A class to group all of the PID coefficeints together
     public static class PIDCoefficients {
         public double kP;
@@ -53,6 +63,7 @@ public class CknPIDController {
 
     PIDCoefficients pidCoef;
     CknInputStream inputStream;
+    Parameters params;
 
     private double threshold;
     double currError = 0.0;
@@ -64,10 +75,12 @@ public class CknPIDController {
 
     boolean isRelative;
 
-    double timeThreshold;
+    double settlingTimeThreshold;
+    boolean allowOscillation;
+    double settleTime;
     double targetTime;
 
-    private double minOutput = -1.0, maxOutput = 1.0;
+    private double minOutput, maxOutput;
 
     public CknPIDController(PIDCoefficients pidCoef, CknInputStream inputStream, double threshold){
         this(pidCoef, inputStream, threshold, 0);
@@ -77,7 +90,17 @@ public class CknPIDController {
         this.pidCoef = pidCoef;
         this.inputStream = inputStream;
         this.threshold = threshold;
-        this.timeThreshold = timeThreshold;
+        this.settlingTimeThreshold = timeThreshold;
+    }
+
+    public CknPIDController(PIDCoefficients pidCoef, CknInputStream inputStream, Parameters params){
+        this.pidCoef = pidCoef;
+        this.inputStream = inputStream;
+        this.threshold = params.threshold;
+        this.minOutput = params.minOutput;
+        this.maxOutput = params.maxOutput;
+        this.settlingTimeThreshold = params.settlingTimeThreshold;
+        this.allowOscillation = params.allowOscillation;
     }
 
     public void setThreshold(double threshold){
@@ -143,17 +166,30 @@ public class CknPIDController {
         }
     }
 
+    /**
+     * Checks if the PID is currently on target.
+     * @return true if on target.
+     */
     public boolean onTarget(){
+        boolean onTarget = false;
+
         currError = setPoint - (double) inputStream.getInput();
-        if(Math.abs(currError) > threshold){
-            targetTime = CknUtil.getCurrentTime();
-        }
-        if(Math.abs(currError) < threshold){
-            if(CknUtil.getCurrentTime() > targetTime + timeThreshold){
-                return true;
+
+        // We can allow the PID to oscillate and only return true on target if it has
+        // been on target for a set time.
+        if(allowOscillation){
+            if(Math.abs(currError) > threshold){
+                settleTime = CknUtil.getCurrentTime();
+            } else if(CknUtil.getCurrentTime() - settleTime > settlingTimeThreshold){
+                onTarget = true;
+            }
+        } else {
+            if(Math.abs(currError) < threshold){
+                onTarget = true;
             }
         }
-        return false;
+
+        return onTarget;
     }
 
     /**
