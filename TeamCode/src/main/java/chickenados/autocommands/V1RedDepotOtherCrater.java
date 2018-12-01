@@ -54,6 +54,7 @@ public class V1RedDepotOtherCrater extends LinearOpMode{
 
     @Override
     public void runOpMode() throws InterruptedException{
+        CknUtil.CknLoopCounter.getInstance().loop++;
         robot = new RobotV1(hardwareMap, telemetry, false, true);
 
         if(DO_SCAN_MINERALS){

@@ -25,6 +25,7 @@ public class V1RedDepot extends LinearOpMode{
         TURN_TO_DEPOT,
         DRIVE_TO_DEPOT,
         TURN_TO_DROP,
+        BACK_TO_DROP,
         DROP_MARKER,
         RESET_SERVO,
         LINE_UP_FOR_CRATER,
@@ -176,6 +177,13 @@ public class V1RedDepot extends LinearOpMode{
 
                         robot.pidDrive.driveDistanceTank(0, 90, 2.5, event);
 
+                        sm.waitForEvent(event, State.BACK_TO_DROP);
+                        break;
+                    case BACK_TO_DROP:
+                        event.reset();
+
+                        robot.pidDrive.driveDistanceTank(-7, 90, 1, event);
+
                         sm.waitForEvent(event, State.DROP_MARKER);
                         break;
                     case DROP_MARKER:
@@ -193,8 +201,6 @@ public class V1RedDepot extends LinearOpMode{
                         // End the program if it detected left since the robot hits the mineral.
                         if(goldState != RobotV1VisionAnalyzer.GoldState.LEFT){
                             sm.waitForEvent(event, State.LINE_UP_FOR_CRATER);
-                        } else {
-                            sm.waitForEvent(event, State.END);
                         }
                         break;
                     case LINE_UP_FOR_CRATER:
@@ -207,7 +213,7 @@ public class V1RedDepot extends LinearOpMode{
                     case DRIVE_TO_CRATER:
                         event.reset();
 
-                        robot.pidDrive.driveDistanceTank(90, 48, 2.5,event);
+                        robot.pidDrive.driveDistanceTank(97, 48, 2.5,event);
 
                         sm.waitForEvent(event, State.END);
                         break;

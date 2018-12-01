@@ -185,12 +185,12 @@ public class CknPIDController {
 
         // Variables used to calculated P, I, D
 
+        prevError = currError;
         double currTime = CknUtil.getCurrentTime();
         deltaTime = currTime - prevTime;
-
+        prevTime = currTime;
         double input = (double) inputStream.getInput();
         currError = setPoint - input;
-        deltaError = currError - prevError;
 
         if(pidCoef.kI != 0.0) {
             double gain = (totalError + (currError * deltaTime)) * pidCoef.kI;
@@ -201,7 +201,6 @@ public class CknPIDController {
             } else {
                 totalError += currError * deltaTime;
             }
-            totalError += currError * deltaTime;
         }
 
         // Calcluating P, I, D, terms
@@ -210,7 +209,7 @@ public class CknPIDController {
         if(deltaTime <= 0.0){
             dTerm = 0.0;
         } else {
-            dTerm = deltaError / deltaTime;
+            dTerm = (currError - prevError) / deltaTime;
         }
         fTerm = setPoint;
 
@@ -224,10 +223,6 @@ public class CknPIDController {
         if(output < minOutput){
             output = minOutput;
         }
-
-        // Save current values to be used in next loop.
-        prevError = currError;
-        prevTime = currTime;
 
         return output;
 

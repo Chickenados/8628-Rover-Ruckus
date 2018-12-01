@@ -72,8 +72,7 @@ public class PIDTuner extends LinearOpMode {
             }
 
             if(gamepad1.right_bumper && currState == State.DRIVE_FORWARD) {
-                robot.yPid.reset();
-                robot.turnPid.reset();
+                robot.pidDrive.stop();
                 currState = State.IDLE;
             }
             robot.dashboard.setLine(0, "State: " + currState);
