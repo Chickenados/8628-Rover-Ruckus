@@ -141,6 +141,7 @@ public class RobotV1 extends CknRobot {
         CknDriveBase.Parameters params = new CknDriveBase.Parameters();
         params.driveTypes.add(CknDriveBase.DriveType.TANK);
         params.driveTypes.add(CknDriveBase.DriveType.ARCADE);
+        params.driveTypes.add(CknDriveBase.DriveType.MECANUM);
         params.ticksPerRev = RobotV1Info.ENCODER_TICKS_PER_REV;
         params.gearRatio = RobotV1Info.GEAR_RATIO;
         params.wheelDiameter = RobotV1Info.WHEEL_DIAMETER_INCHES;
