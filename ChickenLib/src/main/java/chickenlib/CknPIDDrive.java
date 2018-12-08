@@ -2,6 +2,7 @@ package chickenlib;
 
 import chickenlib.util.CknEvent;
 import chickenlib.util.CknUtil;
+import chickenlib.util.CknWraparound;
 
 public class CknPIDDrive implements CknTaskManager.Task{
 

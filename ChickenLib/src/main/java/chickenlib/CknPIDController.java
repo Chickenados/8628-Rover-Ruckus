@@ -3,6 +3,7 @@ package chickenlib;
 import chickenlib.inputstreams.CknInputStream;
 import chickenlib.display.CknSmartDashboard;
 import chickenlib.util.CknUtil;
+import chickenlib.util.CknWraparound;
 
 public class CknPIDController {
 
@@ -17,6 +18,9 @@ public class CknPIDController {
     public static class Parameters {
         double minOutput = -1.0;
         double maxOutput = 1.0;
+        double minTarget = 0.0;
+        double maxTarget = 0.0;
+        boolean useWraparound = false;
         double minDeadband = -1.0;
         double maxDeadband = 1.0;
         boolean allowOscillation = false;
@@ -150,6 +154,10 @@ public class CknPIDController {
 
             this.setPoint = setPoint;
 
+        }
+
+        if(params.useWraparound){
+            this.setPoint = CknWraparound.getTarget(params.minTarget, params.maxTarget, input, this.setPoint);
         }
     }
 
