@@ -172,6 +172,10 @@ public class RobotV1 extends CknRobot {
         // PID Drive systems
         //
 
+        CknPIDController.Parameters yPidParams = new CknPIDController.Parameters();
+        yPidParams.allowOscillation = false;
+        yPidParams.useWraparound = false;
+
         yPid = new CknPIDController(new CknPIDController.PIDCoefficients(RobotV1Info.Y_ENCODER_PID_P,
                 RobotV1Info.Y_ENCODER_PID_I, RobotV1Info.Y_ENCODER_PID_D),
                 new CknLocationInputStream(locationTracker, CknLocationInputStream.InputType.Y_POSITION),
@@ -194,6 +198,10 @@ public class RobotV1 extends CknRobot {
         //
         // Lift Subsystems
         //
+
+        CknPIDController.Parameters liftPidParams = new CknPIDController.Parameters();
+        liftPidParams.useWraparound = false;
+        liftPidParams.allowOscillation = false;
 
         liftPid = new CknPIDController(new CknPIDController.PIDCoefficients(RobotV1Info.LIFT_PID_P,
                 RobotV1Info.LIFT_PID_I, RobotV1Info.LIFT_PID_D),
