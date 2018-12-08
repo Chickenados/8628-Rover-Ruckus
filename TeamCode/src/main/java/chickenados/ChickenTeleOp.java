@@ -119,6 +119,8 @@ public class ChickenTeleOp extends LinearOpMode {
                 robot.driveBase.setMode(CknDriveBase.DriveType.TANK);
             else if (gamepad2.dpad_left)
                 robot.driveBase.setMode(CknDriveBase.DriveType.ARCADE);
+            else if (gamepad2.dpad_up)
+                robot.driveBase.setMode(CknDriveBase.DriveType.MECANUM);
 
             // Display robot info to the dashboard
             //robot.dashboard.setLine(1, "Drive Mode: " + robot.driveBase.getMode());
