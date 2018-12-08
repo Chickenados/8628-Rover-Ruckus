@@ -96,28 +96,15 @@ public class CknPIDController {
     public CknPIDController(PIDCoefficients pidCoef, CknInputStream inputStream, Parameters params){
         this.pidCoef = pidCoef;
         this.inputStream = inputStream;
+        setParameters(params);
+    }
+
+    public void setParameters(Parameters params){
         this.threshold = params.threshold;
         this.minOutput = params.minOutput;
         this.maxOutput = params.maxOutput;
         this.settlingTimeThreshold = params.settlingTimeThreshold;
         this.allowOscillation = params.allowOscillation;
-    }
-
-    public void setThreshold(double threshold){
-        this.threshold = threshold;
-    }
-
-    public void setOutputRange(double min, double max){
-        minOutput = min;
-        maxOutput = max;
-    }
-
-    public void setMinOutput(double min){
-        minOutput = min;
-    }
-
-    public void setMaxOutput(double max){
-        maxOutput = max;
     }
 
     /**
