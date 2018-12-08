@@ -8,7 +8,7 @@ public class RobotV1Grabber {
 
     private CRServo grabber;
 
-    RobotV1Grabber(CRServo servo){
+    public RobotV1Grabber(CRServo servo){
         this.grabber = servo;
     }
 
