@@ -104,16 +104,25 @@ public class CknLocationTracker implements CknTaskManager.Task {
                     double enc4 = driveBase.getEncoderValue(CknDriveBase.MotorType.REAR_RIGHT);
 
                     location.y = (enc1 + enc2 + enc3 + enc4) / 4;
-
-                    if(driveBase.getMode() == CknDriveBase.DriveType.MECANUM) {
-                        location.x = ((enc1 + enc4) - (enc2 + enc3)) / 4;
-                    }
                 }
                 else
                 {
                     throw new IllegalArgumentException("Location Tracking doesn't support current drive train.");
                 }
             } else {
+
+                if(numMotors == 4){
+                    double enc1 = driveBase.getEncoderValue(CknDriveBase.MotorType.FRONT_LEFT);
+                    double enc2 = driveBase.getEncoderValue(CknDriveBase.MotorType.FRONT_RIGHT);
+                    double enc3 = driveBase.getEncoderValue(CknDriveBase.MotorType.REAR_LEFT);
+                    double enc4 = driveBase.getEncoderValue(CknDriveBase.MotorType.REAR_RIGHT);
+
+                    location.y = (enc1 + enc2 + enc3 + enc4) / 4;
+
+                    if(driveBase.getMode() == CknDriveBase.DriveType.MECANUM) {
+                        location.x = ((enc1 + enc4) - (enc2 + enc3)) / 4;
+                    }
+                }
 
             }
         }

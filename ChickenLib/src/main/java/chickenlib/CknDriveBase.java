@@ -46,9 +46,6 @@ public class CknDriveBase {
     private DcMotor rearLeft;
     private DcMotor rearRight;
 
-    //TODO: Add support for this.
-    private boolean isHolonomic = false;
-
     //Other info
     private double speed = 1.0;
 
@@ -133,7 +130,8 @@ public class CknDriveBase {
      * @return whether the robot is holonomic
      */
     public boolean isHolonomic(){
-        return isHolonomic;
+        if(params.driveTypes.contains(DriveType.MECANUM)) return true;
+        return false;
     }
 
     /**
