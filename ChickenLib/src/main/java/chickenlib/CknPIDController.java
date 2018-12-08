@@ -16,16 +16,16 @@ public class CknPIDController {
     private double deltaError;
 
     public static class Parameters {
-        double minOutput = -1.0;
-        double maxOutput = 1.0;
-        double minTarget = 0.0;
-        double maxTarget = 0.0;
-        boolean useWraparound = false;
-        double minDeadband = -1.0;
-        double maxDeadband = 1.0;
-        boolean allowOscillation = false;
-        double threshold = 1.0;
-        double settlingTimeThreshold = 1.0;
+        public double minOutput = -1.0;
+        public double maxOutput = 1.0;
+        public double minTarget = 0.0;
+        public double maxTarget = 0.0;
+        public boolean useWraparound = false;
+        public double minDeadband = -1.0;
+        public double maxDeadband = 1.0;
+        public boolean allowOscillation = false;
+        public double threshold = 1.0;
+        public double settlingTimeThreshold = 1.0;
     }
 
     // A class to group all of the PID coefficeints together
@@ -83,6 +83,8 @@ public class CknPIDController {
     boolean allowOscillation;
     double settleTime;
     double targetTime;
+    double minTarget, maxTarget;
+    boolean useWraparound;
 
     private double minOutput, maxOutput;
 
@@ -109,6 +111,9 @@ public class CknPIDController {
         this.maxOutput = params.maxOutput;
         this.settlingTimeThreshold = params.settlingTimeThreshold;
         this.allowOscillation = params.allowOscillation;
+        this.minTarget = params.minTarget;
+        this.maxTarget = params.maxTarget;
+        this.useWraparound = params.useWraparound;
     }
 
     /**
@@ -155,10 +160,6 @@ public class CknPIDController {
             this.setPoint = setPoint;
 
         }
-
-        if(params.useWraparound){
-            this.setPoint = CknWraparound.getTarget(params.minTarget, params.maxTarget, input, this.setPoint);
-        }
     }
 
     /**
@@ -168,7 +169,11 @@ public class CknPIDController {
     public boolean onTarget(){
         boolean onTarget = false;
 
-        currError = setPoint - (double) inputStream.getInput();
+        if(useWraparound){
+            currError = CknWraparound.getTarget(minTarget, maxTarget, (double) inputStream.getInput(), setPoint);
+        } else {
+            currError = setPoint - (double) inputStream.getInput();
+        }
 
         // We can allow the PID to oscillate and only return true on target if it has
         // been on target for a set time.
@@ -221,7 +226,11 @@ public class CknPIDController {
         deltaTime = currTime - prevTime;
         prevTime = currTime;
         double input = (double) inputStream.getInput();
-        currError = setPoint - input;
+        if(useWraparound){
+            currError = CknWraparound.getTarget(minTarget, maxTarget, input, setPoint);
+        } else {
+            currError = setPoint - input;
+        }
 
         if(pidCoef.kI != 0.0) {
             double gain = (totalError + (currError * deltaTime)) * pidCoef.kI;

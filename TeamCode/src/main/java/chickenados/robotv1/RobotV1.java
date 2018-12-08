@@ -176,10 +176,18 @@ public class RobotV1 extends CknRobot {
                 RobotV1Info.Y_ENCODER_PID_I, RobotV1Info.Y_ENCODER_PID_D),
                 new CknLocationInputStream(locationTracker, CknLocationInputStream.InputType.Y_POSITION),
                 40);
+
+        CknPIDController.Parameters turnPidParams = new CknPIDController.Parameters();
+        turnPidParams.useWraparound = true;
+        turnPidParams.maxTarget = 180;
+        turnPidParams.minTarget = -179;
+        turnPidParams.allowOscillation = true;
+        turnPidParams.settlingTimeThreshold = 1;
+
         turnPid = new CknPIDController(new CknPIDController.PIDCoefficients(RobotV1Info.TURN_PID_P,
                 RobotV1Info.TURN_PID_I, RobotV1Info.TURN_PID_D),
                 new CknLocationInputStream(locationTracker, CknLocationInputStream.InputType.HEADING),
-                2, 1);
+                turnPidParams);
 
         pidDrive = new CknPIDDrive(driveBase, yPid, turnPid);
 
