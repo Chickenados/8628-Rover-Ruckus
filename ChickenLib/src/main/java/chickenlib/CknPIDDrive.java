@@ -113,8 +113,8 @@ public class CknPIDDrive implements CknTaskManager.Task{
     public void postContinuous(){
         double leftPower, rightPower;
 
-        leftPower = yPid.getOutput() + turnPid.getOutput();
-        rightPower = yPid.getOutput() - turnPid.getOutput();
+        leftPower = yPid.getOutput() - turnPid.getOutput();
+        rightPower = yPid.getOutput() + turnPid.getOutput();
 
         driveBase.tankDrive(leftPower, rightPower);
 

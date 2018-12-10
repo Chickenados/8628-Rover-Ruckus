@@ -158,6 +158,8 @@ public class CknPIDController {
         } else {
 
             this.setPoint = setPoint;
+            if(useWraparound) this.setPoint = CknWraparound.getTarget(minTarget, maxTarget, input, this.setPoint);
+            currError = this.setPoint - input;
 
         }
     }
@@ -226,11 +228,8 @@ public class CknPIDController {
         deltaTime = currTime - prevTime;
         prevTime = currTime;
         double input = (double) inputStream.getInput();
-        if(useWraparound){
-            currError = CknWraparound.getTarget(minTarget, maxTarget, input, setPoint);
-        } else {
-            currError = setPoint - input;
-        }
+        currError = setPoint - input;
+
 
         if(pidCoef.kI != 0.0) {
             double gain = (totalError + (currError * deltaTime)) * pidCoef.kI;

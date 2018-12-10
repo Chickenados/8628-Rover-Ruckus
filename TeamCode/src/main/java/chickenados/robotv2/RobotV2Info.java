@@ -24,15 +24,15 @@ public class RobotV2Info {
 
     //TODO: Tune PIDS
     //PID Coefficients
-    public static final double Y_ENCODER_PID_P = 0.005;
+    public static final double Y_ENCODER_PID_P = 0.0006;
     public static final double Y_ENCODER_PID_I = 0.0;
     public static final double Y_ENCODER_PID_D = 0.0;
 
     //kU value (steady oscillation)
     // public static final double TURN_PID_P = 0.2;
-    public static final double TURN_PID_P = 0.025;
+    public static final double TURN_PID_P = 0.014;
     public static final double TURN_PID_I = 0.0;
-    public static final double TURN_PID_D = 0.0025;
+    public static final double TURN_PID_D = 0.0;
 
     public static final String IMU_NAME = "imu";
 

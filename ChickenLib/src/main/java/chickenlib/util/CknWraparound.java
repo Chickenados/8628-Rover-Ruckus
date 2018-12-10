@@ -6,12 +6,9 @@ public class CknWraparound {
 
     public static double getTarget(double minPoint, double maxPoint, double inputValue, double target){
         double range = maxPoint - minPoint;
-        double targetDistance = (target - inputValue) % range;
+        double distance = (target - inputValue) % range;
+        double absDistance = Math.abs(distance);
 
-        if(targetDistance > range / 2){
-            targetDistance = Math.signum(targetDistance) * (range - Math.abs(targetDistance));
-        }
-
-        return targetDistance;
+        return inputValue + ((absDistance > (range / 2)) ? -Math.signum(distance) * (range - absDistance) : distance);
     }
 }

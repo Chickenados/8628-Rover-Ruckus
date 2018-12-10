@@ -178,14 +178,27 @@ public class RobotV2 extends CknRobot {
         // PID Drive systems
         //
 
+        CknPIDController.Parameters yParams = new CknPIDController.Parameters();
+        yParams.allowOscillation = false;
+        yParams.useWraparound = false;
+
         yPid = new CknPIDController(new CknPIDController.PIDCoefficients(RobotV2Info.Y_ENCODER_PID_P,
                 RobotV2Info.Y_ENCODER_PID_I, RobotV2Info.Y_ENCODER_PID_D),
                 new CknLocationInputStream(locationTracker, CknLocationInputStream.InputType.Y_POSITION),
-                40);
+                yParams);
+
+
+        CknPIDController.Parameters turnParams = new CknPIDController.Parameters();
+        turnParams.allowOscillation = true;
+        turnParams.settlingTimeThreshold = 1;
+        turnParams.useWraparound = true;
+        turnParams.maxTarget = 360;
+        turnParams.minTarget = 0;
+
         turnPid = new CknPIDController(new CknPIDController.PIDCoefficients(RobotV2Info.TURN_PID_P,
                 RobotV2Info.TURN_PID_I, RobotV2Info.TURN_PID_D),
                 new CknLocationInputStream(locationTracker, CknLocationInputStream.InputType.HEADING),
-                2, 1);
+                turnParams);
 
         pidDrive = new CknPIDDrive(driveBase, yPid, turnPid);
 
@@ -193,9 +206,13 @@ public class RobotV2 extends CknRobot {
         // Lift Subsystems
         //
 
+        CknPIDController.Parameters liftParams = new CknPIDController.Parameters();
+        liftParams.allowOscillation = false;
+        liftParams.useWraparound = false;
+
         liftPid = new CknPIDController(new CknPIDController.PIDCoefficients(RobotV2Info.LIFT_PID_P,
                 RobotV2Info.LIFT_PID_I, RobotV2Info.LIFT_PID_D),
-                new CknEncoderInputStream(liftMotor), 20, 0);
+                new CknEncoderInputStream(liftMotor), liftParams);
         lift = new RobotV1Lift(liftMotor, liftPid);
 
         //
