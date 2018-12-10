@@ -221,6 +221,8 @@ public class V2Depot extends LinearOpMode{
 
 
             }
+
+            mgr.executeTasks(CknTaskManager.TaskType.POSTCONTINUOUS);
         }
 
 

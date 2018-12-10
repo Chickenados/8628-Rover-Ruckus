@@ -220,6 +220,8 @@ public class V1RedDepotOtherCrater extends LinearOpMode{
 
 
             }
+
+            mgr.executeTasks(CknTaskManager.TaskType.POSTCONTINUOUS);
         }
 
 
