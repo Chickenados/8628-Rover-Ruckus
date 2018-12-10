@@ -5,6 +5,8 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import chickenados.robotv1.RobotV1;
 import chickenados.robotv1.RobotV1Info;
+import chickenados.robotv2.RobotV2;
+import chickenados.robotv2.RobotV2Info;
 import chickenlib.CknTaskManager;
 import chickenlib.util.CknEvent;
 import chickenlib.CknPIDController;
@@ -21,7 +23,7 @@ public class PIDTuner extends LinearOpMode {
 
     private static final int ROUND_PLACES = 6;
 
-    RobotV1 robot;
+    RobotV2 robot;
     CknStateMachine<State> sm = new CknStateMachine<>();
     CknEvent event = new CknEvent();
     State currState;
@@ -29,9 +31,9 @@ public class PIDTuner extends LinearOpMode {
 
     PIDType currentPid = PIDType.DRIVE;
 
-    double kP = RobotV1Info.Y_ENCODER_PID_P;
-    double kI = RobotV1Info.Y_ENCODER_PID_I;
-    double kD = RobotV1Info.Y_ENCODER_PID_D;
+    double kP = RobotV2Info.Y_ENCODER_PID_P;
+    double kI = RobotV2Info.Y_ENCODER_PID_I;
+    double kD = RobotV2Info.Y_ENCODER_PID_D;
 
     boolean upReleased = true;
     boolean downReleased = true;
@@ -55,7 +57,7 @@ public class PIDTuner extends LinearOpMode {
     @Override
     public void runOpMode(){
 
-        robot = new RobotV1(hardwareMap, telemetry);
+        robot = new RobotV2(hardwareMap, telemetry);
 
         waitForStart();
 

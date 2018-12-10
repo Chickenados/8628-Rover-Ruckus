@@ -19,7 +19,7 @@ public class RobotV2Info {
 
     //TODO: Update these values
     public static final double WHEEL_DIAMETER_INCHES = 4;
-    public static final int ENCODER_TICKS_PER_REV = 1120;
+    public static final int ENCODER_TICKS_PER_REV = 2240;
     public static final double GEAR_RATIO = 2;
 
     //TODO: Tune PIDS
