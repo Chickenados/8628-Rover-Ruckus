@@ -3,6 +3,7 @@ package chickenlib;
 import chickenlib.inputstreams.CknInputStream;
 import chickenlib.display.CknSmartDashboard;
 import chickenlib.util.CknUtil;
+import chickenlib.util.CknWraparound;
 
 public class CknPIDController {
 
@@ -13,6 +14,19 @@ public class CknPIDController {
 
     private double deltaTime;
     private double deltaError;
+
+    public static class Parameters {
+        public double minOutput = -1.0;
+        public double maxOutput = 1.0;
+        public double minTarget = 0.0;
+        public double maxTarget = 0.0;
+        public boolean useWraparound = false;
+        public double minDeadband = -1.0;
+        public double maxDeadband = 1.0;
+        public boolean allowOscillation = false;
+        public double threshold = 1.0;
+        public double settlingTimeThreshold = 1.0;
+    }
 
     // A class to group all of the PID coefficeints together
     public static class PIDCoefficients {
@@ -53,6 +67,7 @@ public class CknPIDController {
 
     PIDCoefficients pidCoef;
     CknInputStream inputStream;
+    Parameters params;
 
     private double threshold;
     double currError = 0.0;
@@ -64,10 +79,14 @@ public class CknPIDController {
 
     boolean isRelative;
 
-    double timeThreshold;
+    double settlingTimeThreshold;
+    boolean allowOscillation;
+    double settleTime;
     double targetTime;
+    double minTarget, maxTarget;
+    boolean useWraparound;
 
-    private double minOutput = -1.0, maxOutput = 1.0;
+    private double minOutput, maxOutput;
 
     public CknPIDController(PIDCoefficients pidCoef, CknInputStream inputStream, double threshold){
         this(pidCoef, inputStream, threshold, 0);
@@ -77,24 +96,24 @@ public class CknPIDController {
         this.pidCoef = pidCoef;
         this.inputStream = inputStream;
         this.threshold = threshold;
-        this.timeThreshold = timeThreshold;
+        this.settlingTimeThreshold = timeThreshold;
     }
 
-    public void setThreshold(double threshold){
-        this.threshold = threshold;
+    public CknPIDController(PIDCoefficients pidCoef, CknInputStream inputStream, Parameters params){
+        this.pidCoef = pidCoef;
+        this.inputStream = inputStream;
+        setParameters(params);
     }
 
-    public void setOutputRange(double min, double max){
-        minOutput = min;
-        maxOutput = max;
-    }
-
-    public void setMinOutput(double min){
-        minOutput = min;
-    }
-
-    public void setMaxOutput(double max){
-        maxOutput = max;
+    public void setParameters(Parameters params){
+        this.threshold = params.threshold;
+        this.minOutput = params.minOutput;
+        this.maxOutput = params.maxOutput;
+        this.settlingTimeThreshold = params.settlingTimeThreshold;
+        this.allowOscillation = params.allowOscillation;
+        this.minTarget = params.minTarget;
+        this.maxTarget = params.maxTarget;
+        this.useWraparound = params.useWraparound;
     }
 
     /**
@@ -143,17 +162,34 @@ public class CknPIDController {
         }
     }
 
+    /**
+     * Checks if the PID is currently on target.
+     * @return true if on target.
+     */
     public boolean onTarget(){
-        currError = setPoint - (double) inputStream.getInput();
-        if(Math.abs(currError) > threshold){
-            targetTime = CknUtil.getCurrentTime();
+        boolean onTarget = false;
+
+        if(useWraparound){
+            currError = CknWraparound.getTarget(minTarget, maxTarget, (double) inputStream.getInput(), setPoint);
+        } else {
+            currError = setPoint - (double) inputStream.getInput();
         }
-        if(Math.abs(currError) < threshold){
-            if(CknUtil.getCurrentTime() > targetTime + timeThreshold){
-                return true;
+
+        // We can allow the PID to oscillate and only return true on target if it has
+        // been on target for a set time.
+        if(allowOscillation){
+            if(Math.abs(currError) > threshold){
+                settleTime = CknUtil.getCurrentTime();
+            } else if(CknUtil.getCurrentTime() - settleTime > settlingTimeThreshold){
+                onTarget = true;
+            }
+        } else {
+            if(Math.abs(currError) < threshold){
+                onTarget = true;
             }
         }
-        return false;
+
+        return onTarget;
     }
 
     /**
@@ -190,7 +226,11 @@ public class CknPIDController {
         deltaTime = currTime - prevTime;
         prevTime = currTime;
         double input = (double) inputStream.getInput();
-        currError = setPoint - input;
+        if(useWraparound){
+            currError = CknWraparound.getTarget(minTarget, maxTarget, input, setPoint);
+        } else {
+            currError = setPoint - input;
+        }
 
         if(pidCoef.kI != 0.0) {
             double gain = (totalError + (currError * deltaTime)) * pidCoef.kI;
