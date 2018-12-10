@@ -98,11 +98,11 @@ public class CknDriveBase {
     }
 
     /**
-     * Inverts the direction of a specific motor in the drive train.
+     * Reverses the direction of a specific motor in the drive train.
      *
      * @param motorType the motor to invert.
      */
-    public void invertMotor(MotorType motorType){
+    public void reverseMotor(MotorType motorType){
         if(motorType == MotorType.FRONT_LEFT){
             this.frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         }
