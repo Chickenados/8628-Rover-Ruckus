@@ -119,7 +119,7 @@ public class V2Depot extends LinearOpMode{
                     case MOVE_FROM_HOOK:
                         event.reset();
 
-                        robot.pidDrive.driveDistanceTank(-5, 0, 2, event);
+                        robot.pidDrive.driveDistanceTank(5, 0, 1, event);
 
                         sm.waitForEvent(event, State.TURN_TO_MINERAL);
                         break;
@@ -140,9 +140,9 @@ public class V2Depot extends LinearOpMode{
                     case DRIVE_TO_MINERAL:
                         event.reset();
 
-                        robot.pidDrive.driveDistanceTank(-47, angleToMaintain, 4, event);
+                        robot.pidDrive.driveDistanceTank(25, angleToMaintain, 4, event);
 
-                        sm.waitForEvent(event, State.TURN_TO_DEPOT);
+                        sm.waitForEvent(event, State.END);
                         break;
                     case TURN_TO_DEPOT:
                         event.reset();
@@ -159,13 +159,13 @@ public class V2Depot extends LinearOpMode{
 
                         if(goldState == RobotV1VisionAnalyzer.GoldState.UNKNOWN
                                 || goldState == RobotV1VisionAnalyzer.GoldState.CENTER) {
-                            robot.pidDrive.driveDistanceTank(-75, 0, 4, event);
+                            robot.pidDrive.driveDistanceTank(75, 0, 4, event);
                         } else {
                             angleToMaintain = robot.locationTracker.getLocation().heading;
                             if(goldState == RobotV1VisionAnalyzer.GoldState.LEFT){
-                                robot.pidDrive.driveDistanceTank(-40, angleToMaintain, 4, event);
+                                robot.pidDrive.driveDistanceTank(40, angleToMaintain, 4, event);
                             } else {
-                                robot.pidDrive.driveDistanceTank(-37, angleToMaintain, 4, event);
+                                robot.pidDrive.driveDistanceTank(37, angleToMaintain, 4, event);
                             }
                         }
 
@@ -198,10 +198,10 @@ public class V2Depot extends LinearOpMode{
                                 goldState == RobotV1VisionAnalyzer.GoldState.CENTER) {
                             robot.pidDrive.driveDistanceTank(0,135, 2.5, event);
                         } else if(goldState == RobotV1VisionAnalyzer.GoldState.LEFT){
-                            robot.pidDrive.driveDistanceTank(-20,45,2.5, event);
-                            robot.pidDrive.driveDistanceTank(-40, 135, 4, event);
+                            robot.pidDrive.driveDistanceTank(20,45,2.5, event);
+                            robot.pidDrive.driveDistanceTank(40, 135, 4, event);
                         } else {
-                            robot.pidDrive.driveDistanceTank(-37, 135, 4, event);
+                            robot.pidDrive.driveDistanceTank(37, 135, 4, event);
                         }
 
                         sm.waitForEvent(event, State.DRIVE_TO_CRATER);
@@ -209,7 +209,7 @@ public class V2Depot extends LinearOpMode{
                     case DRIVE_TO_CRATER:
                         event.reset();
 
-                        robot.pidDrive.driveDistanceTank(-90, 135, 2.5,event);
+                        robot.pidDrive.driveDistanceTank( 90, 135, 2.5,event);
 
                         sm.waitForEvent(event, State.END);
                         break;
