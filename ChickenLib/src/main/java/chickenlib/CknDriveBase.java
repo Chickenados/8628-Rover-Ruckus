@@ -195,6 +195,27 @@ public class CknDriveBase {
         rearRight.setPower(motorPowers[MotorType.REAR_RIGHT.value]);
     }
 
+    public void mecanumDrive(double forward, double sideways, double rotation){
+        if(numMotors != 4){
+            throw new IllegalArgumentException("Mecanum drive requires 4 motors!");
+        }
+
+        double[] motorPowers = new double[4];
+        motorPowers[MotorType.FRONT_LEFT.value] = (forward + sideways + rotation) * speed;
+        motorPowers[MotorType.FRONT_RIGHT.value] = (forward - sideways) - rotation * speed;
+        motorPowers[MotorType.REAR_LEFT.value] = (forward - sideways) + rotation * speed;
+        motorPowers[MotorType.REAR_RIGHT.value] = forward + (sideways - rotation) * speed;
+
+        // Normalize each motor speed so we don't exceed 1.
+        motorPowers = normalizeMotorPowers(motorPowers);
+
+        // Set the power of each motor
+        frontLeft.setPower(motorPowers[MotorType.FRONT_LEFT.value]);
+        frontRight.setPower(motorPowers[MotorType.FRONT_RIGHT.value]);
+        rearLeft.setPower(motorPowers[MotorType.REAR_LEFT.value]);
+        rearRight.setPower(motorPowers[MotorType.REAR_RIGHT.value]);
+    }
+
     public void arcadeDrive(double power, double turn){
 
         double leftpower = (power - turn) * speed;
@@ -218,7 +239,7 @@ public class CknDriveBase {
                 arcadeDrive(y1, x2);
                 break;
             case MECANUM:
-                mecanumDrive_Cartesian(x1, y1, x2);
+                mecanumDrive(y2, x2, x1);
                 break;
         }
     }
