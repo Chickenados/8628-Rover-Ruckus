@@ -111,7 +111,7 @@ public class TurnTesting extends LinearOpMode{
                     case  FIRST_TURN:
                         event.reset();
 
-                        robot.pidDrive.driveDistanceTank(0,1,5,event);
+                        robot.pidDrive.driveDistanceTank(0,10,5,event);
 
 
 
