@@ -111,31 +111,56 @@ public class TurnTesting extends LinearOpMode{
                     case  FIRST_TURN:
                         event.reset();
 
-                        robot.pidDrive.driveDistanceTank(0,90,5,event);
+                        robot.pidDrive.driveDistanceTank(0,1,5,event);
+
+
 
                         sm.waitForEvent(event, State.SECOND_TURN);
+
                         break;
+
                     case SECOND_TURN:
+
                         event.reset();
+
+
 
                         robot.pidDrive.driveDistanceTank(0,360,5,event);
 
+
+
                         sm.waitForEvent(event, State.END);
+
                         break;
+
                     case END:
+
                         event.reset();
+
                         sm.stop();
+
                         break;
+
                 }
+
+
+
 
 
             }
 
+
+
             mgr.executeTasks(CknTaskManager.TaskType.POSTCONTINUOUS);
+
         }
 
 
 
-    }
-}
 
+
+
+
+    }
+
+}
