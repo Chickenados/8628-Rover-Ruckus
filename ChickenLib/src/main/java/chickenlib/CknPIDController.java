@@ -172,7 +172,7 @@ public class CknPIDController {
         boolean onTarget = false;
 
         currError = setPoint - (double) inputStream.getInput();
-        
+
 
         // We can allow the PID to oscillate and only return true on target if it has
         // been on target for a set time.
