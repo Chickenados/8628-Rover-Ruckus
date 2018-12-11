@@ -191,7 +191,7 @@ public class RobotV2 extends CknRobot {
         CknPIDController.Parameters turnParams = new CknPIDController.Parameters();
         turnParams.allowOscillation = false;
         turnParams.settlingTimeThreshold = 1;
-        turnParams.useWraparound = true;
+        turnParams.useWraparound = false;
         turnParams.maxTarget = 360;
         turnParams.minTarget = 0;
         turnParams.threshold = 2.0;

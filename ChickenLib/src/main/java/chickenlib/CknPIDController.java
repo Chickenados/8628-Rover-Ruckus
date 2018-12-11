@@ -157,8 +157,11 @@ public class CknPIDController {
 
         } else {
 
-            this.setPoint = setPoint;
-            if(useWraparound) this.setPoint = CknWraparound.getTarget(minTarget, maxTarget, input, this.setPoint);
+            if(useWraparound) {
+                this.setPoint = CknWraparound.getTarget(minTarget, maxTarget, input, setPoint);
+            } else {
+                this.setPoint = setPoint;
+            }
             currError = this.setPoint - input;
 
         }
