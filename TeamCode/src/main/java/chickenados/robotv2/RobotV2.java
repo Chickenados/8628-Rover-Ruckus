@@ -194,6 +194,7 @@ public class RobotV2 extends CknRobot {
         turnParams.useWraparound = true;
         turnParams.maxTarget = 360;
         turnParams.minTarget = 0;
+        turnParams.threshold = 2.0;
 
         turnPid = new CknPIDController(new CknPIDController.PIDCoefficients(RobotV2Info.TURN_PID_P,
                 RobotV2Info.TURN_PID_I, RobotV2Info.TURN_PID_D),
