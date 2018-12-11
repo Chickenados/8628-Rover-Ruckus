@@ -171,11 +171,8 @@ public class CknPIDController {
     public boolean onTarget(){
         boolean onTarget = false;
 
-        if(useWraparound){
-            currError = CknWraparound.getTarget(minTarget, maxTarget, (double) inputStream.getInput(), setPoint);
-        } else {
-            currError = setPoint - (double) inputStream.getInput();
-        }
+        currError = setPoint - (double) inputStream.getInput();
+        
 
         // We can allow the PID to oscillate and only return true on target if it has
         // been on target for a set time.
