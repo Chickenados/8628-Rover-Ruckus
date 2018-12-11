@@ -37,7 +37,7 @@ public class V2Depot extends LinearOpMode{
     private final boolean DO_SCAN_MINERALS = true;
     private final int SCAN_TIMEOUT = 5;
 
-    private final double LEFT_MINERAL_ANGLE = 30;
+    private final double LEFT_MINERAL_ANGLE = 330;
     private final double RIGHT_MINERAL_ANGLE = -30;
 
     // END AUTONOMOUS CONSTANTS
@@ -155,6 +155,7 @@ public class V2Depot extends LinearOpMode{
                         sm.waitForEvent(event, State.DRIVE_TO_DEPOT);
                         break;
                     case DRIVE_TO_DEPOT:
+
                         event.reset();
 
                         if(goldState == RobotV1VisionAnalyzer.GoldState.UNKNOWN
