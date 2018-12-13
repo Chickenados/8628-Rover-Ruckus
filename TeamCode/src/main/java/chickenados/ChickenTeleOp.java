@@ -52,8 +52,8 @@ public class ChickenTeleOp extends LinearOpMode {
         while (opModeIsActive()) {
             mgr.executeTasks(CknTaskManager.TaskType.PRECONTINUOUS);
 
-            robot.driveBase.drive(gamepad2.right_stick_x, gamepad2.right_stick_y,
-                    gamepad2.left_stick_x, gamepad2.left_stick_y);
+            robot.driveBase.drive(gamepad2.right_stick_x, -gamepad2.right_stick_y,
+                    gamepad2.left_stick_x, -gamepad2.left_stick_y);
 
 
             if (gamepad1.left_trigger > 0.3){

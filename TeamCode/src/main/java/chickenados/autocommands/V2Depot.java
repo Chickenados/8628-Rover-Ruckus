@@ -55,7 +55,6 @@ public class V2Depot extends LinearOpMode{
 
     @Override
     public void runOpMode() throws InterruptedException{
-        CknUtil.CknLoopCounter.getInstance().loop++;
         robot = new RobotV2(hardwareMap, telemetry, false, true);
 
         if(DO_SCAN_MINERALS){
@@ -69,7 +68,7 @@ public class V2Depot extends LinearOpMode{
         waitForStart();
 
         while(opModeIsActive()) {
-
+            CknUtil.CknLoopCounter.getInstance().loop++;
             mgr.executeTasks(CknTaskManager.TaskType.PRECONTINUOUS);
 
             robot.dashboard.setLine(1, "State: " + currentState);
@@ -140,9 +139,10 @@ public class V2Depot extends LinearOpMode{
                     case DRIVE_TO_MINERAL:
                         event.reset();
 
+                        angleToMaintain = robot.locationTracker.getLocation().heading;
                         robot.pidDrive.driveDistanceTank(25, angleToMaintain, 4, event);
 
-                        sm.waitForEvent(event, State.END);
+                        sm.waitForEvent(event, State.DRIVE_TO_DEPOT);
                         break;
                     case TURN_TO_DEPOT:
                         event.reset();
@@ -190,6 +190,7 @@ public class V2Depot extends LinearOpMode{
 
                         robot.dropper.reset(event);
 
+                        sm.waitForEvent(event, State.LINE_UP_FOR_CRATER);
                         break;
                     case LINE_UP_FOR_CRATER:
                         event.reset();
@@ -209,7 +210,7 @@ public class V2Depot extends LinearOpMode{
                     case DRIVE_TO_CRATER:
                         event.reset();
 
-                        robot.pidDrive.driveDistanceTank( 90, 135, 2.5,event);
+                        robot.pidDrive.driveDistanceTank( -90, 135, 2.5,event);
 
                         sm.waitForEvent(event, State.END);
                         break;

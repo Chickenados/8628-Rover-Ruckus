@@ -129,8 +129,8 @@ public class RobotV1 extends CknRobot {
         liftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         // Reverse Motors
-        frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
-        rearRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        rearLeft.setDirection(DcMotorSimple.Direction.REVERSE);
 
         //Set motors to braking
         frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);

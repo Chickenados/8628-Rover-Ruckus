@@ -106,7 +106,7 @@ public class V1CompCrater extends LinearOpMode{
                     case DRIVE_FROM_GRABBER:
                         event.reset();
 
-                        robot.pidDrive.driveDistanceTank(-5, 0, 3, event);
+                        robot.pidDrive.driveDistanceTank(5, 0, 3, event);
 
                         if(goldState == RobotV1VisionAnalyzer.GoldState.UNKNOWN
                                 || goldState == RobotV1VisionAnalyzer.GoldState.CENTER) {
@@ -134,7 +134,7 @@ public class V1CompCrater extends LinearOpMode{
                     case DRIVE_TO_MINERAL:
                         event.reset();
 
-                        robot.pidDrive.driveDistanceTank(-50,angleToMaintain,4, event);
+                        robot.pidDrive.driveDistanceTank(50,angleToMaintain,4, event);
 
                         sm.waitForEvent(event, State.END);
                         break;
