@@ -120,7 +120,7 @@ public class V1RedDepot extends LinearOpMode{
                     case MOVE_FROM_HOOK:
                         event.reset();
 
-                        robot.pidDrive.driveDistanceTank(-5, 0, 2, event);
+                        robot.pidDrive.driveDistanceTank(5, 0, 2, event);
 
                         sm.waitForEvent(event, State.TURN_TO_MINERAL);
                         break;
@@ -141,7 +141,7 @@ public class V1RedDepot extends LinearOpMode{
                     case DRIVE_TO_MINERAL:
                         event.reset();
 
-                        robot.pidDrive.driveDistanceTank(-47, angleToMaintain, 4, event);
+                        robot.pidDrive.driveDistanceTank(47, angleToMaintain, 4, event);
 
                         sm.waitForEvent(event, State.TURN_TO_DEPOT);
                         break;
@@ -160,13 +160,13 @@ public class V1RedDepot extends LinearOpMode{
 
                         if(goldState == RobotV1VisionAnalyzer.GoldState.UNKNOWN
                                 || goldState == RobotV1VisionAnalyzer.GoldState.CENTER) {
-                            robot.pidDrive.driveDistanceTank(-75, 0, 4, event);
+                            robot.pidDrive.driveDistanceTank(75, 0, 4, event);
                         } else {
                             angleToMaintain = robot.locationTracker.getLocation().heading;
                             if(goldState == RobotV1VisionAnalyzer.GoldState.LEFT){
-                                robot.pidDrive.driveDistanceTank(-40, angleToMaintain, 4, event);
+                                robot.pidDrive.driveDistanceTank(40, angleToMaintain, 4, event);
                             } else {
-                                robot.pidDrive.driveDistanceTank(-37, angleToMaintain, 4, event);
+                                robot.pidDrive.driveDistanceTank(37, angleToMaintain, 4, event);
                             }
                         }
 
@@ -182,7 +182,7 @@ public class V1RedDepot extends LinearOpMode{
                     case BACK_TO_DROP:
                         event.reset();
 
-                        robot.pidDrive.driveDistanceTank(-7, 90, 1, event);
+                        robot.pidDrive.driveDistanceTank(7, 90, 1, event);
 
                         sm.waitForEvent(event, State.DROP_MARKER);
                         break;
@@ -213,7 +213,7 @@ public class V1RedDepot extends LinearOpMode{
                     case DRIVE_TO_CRATER:
                         event.reset();
 
-                        robot.pidDrive.driveDistanceTank(97, 48, 2.5,event);
+                        robot.pidDrive.driveDistanceTank(-97, 48, 2.5,event);
 
                         sm.waitForEvent(event, State.END);
                         break;
