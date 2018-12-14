@@ -37,8 +37,8 @@ public class V2Depot extends LinearOpMode{
     private final boolean DO_SCAN_MINERALS = true;
     private final int SCAN_TIMEOUT = 5;
 
-    private final double LEFT_MINERAL_ANGLE = 330;
-    private final double RIGHT_MINERAL_ANGLE = -30;
+    private final double LEFT_MINERAL_ANGLE = 30;
+    private final double RIGHT_MINERAL_ANGLE = -35;
 
     // END AUTONOMOUS CONSTANTS
 
@@ -127,10 +127,10 @@ public class V2Depot extends LinearOpMode{
 
                         // Either turn towards left or right mineral.
                         if(goldState == RobotV1VisionAnalyzer.GoldState.LEFT){
-                            robot.pidDrive.driveDistanceTank(0, LEFT_MINERAL_ANGLE, 2.5, event);
+                            robot.pidDrive.driveDistanceTank(0, LEFT_MINERAL_ANGLE, 2, event);
                             angleToMaintain = LEFT_MINERAL_ANGLE;
                         } else {
-                            robot.pidDrive.driveDistanceTank(0, RIGHT_MINERAL_ANGLE, 2.5, event);
+                            robot.pidDrive.driveDistanceTank(0, RIGHT_MINERAL_ANGLE, 2, event);
                             angleToMaintain = RIGHT_MINERAL_ANGLE;
                         }
 
@@ -140,17 +140,17 @@ public class V2Depot extends LinearOpMode{
                         event.reset();
 
                         angleToMaintain = robot.locationTracker.getLocation().heading;
-                        robot.pidDrive.driveDistanceTank(25, angleToMaintain, 4, event);
+                        robot.pidDrive.driveDistanceTank(23, angleToMaintain, 2, event);
 
-                        sm.waitForEvent(event, State.DRIVE_TO_DEPOT);
+                        sm.waitForEvent(event, State.TURN_TO_DEPOT);
                         break;
                     case TURN_TO_DEPOT:
                         event.reset();
 
-                        if(goldState == RobotV1VisionAnalyzer.GoldState.LEFT) angleToMaintain = -20;
-                        if(goldState == RobotV1VisionAnalyzer.GoldState.RIGHT) angleToMaintain *= -1;
+                        if(goldState == RobotV1VisionAnalyzer.GoldState.LEFT) angleToMaintain = -30;
+                        if(goldState == RobotV1VisionAnalyzer.GoldState.RIGHT) angleToMaintain = 40;
 
-                        robot.pidDrive.driveDistanceTank(0, angleToMaintain, 2.5, event);
+                        robot.pidDrive.driveDistanceTank(0, angleToMaintain, 2, event);
 
                         sm.waitForEvent(event, State.DRIVE_TO_DEPOT);
                         break;
@@ -160,13 +160,13 @@ public class V2Depot extends LinearOpMode{
 
                         if(goldState == RobotV1VisionAnalyzer.GoldState.UNKNOWN
                                 || goldState == RobotV1VisionAnalyzer.GoldState.CENTER) {
-                            robot.pidDrive.driveDistanceTank(75, 0, 4, event);
+                            robot.pidDrive.driveDistanceTank(38, 0, 1.75, event);
                         } else {
                             angleToMaintain = robot.locationTracker.getLocation().heading;
                             if(goldState == RobotV1VisionAnalyzer.GoldState.LEFT){
-                                robot.pidDrive.driveDistanceTank(40, angleToMaintain, 4, event);
+                                robot.pidDrive.driveDistanceTank(20, angleToMaintain, 1.5, event);
                             } else {
-                                robot.pidDrive.driveDistanceTank(37, angleToMaintain, 4, event);
+                                robot.pidDrive.driveDistanceTank(27, angleToMaintain, 2, event);
                             }
                         }
 
@@ -196,22 +196,14 @@ public class V2Depot extends LinearOpMode{
                     case LINE_UP_FOR_CRATER:
                         event.reset();
 
-                        if (goldState == RobotV1VisionAnalyzer.GoldState.UNKNOWN ||
-                                goldState == RobotV1VisionAnalyzer.GoldState.CENTER) {
-                            robot.pidDrive.driveDistanceTank(0,135, 2.5, event);
-                        } else if(goldState == RobotV1VisionAnalyzer.GoldState.LEFT){
-                            robot.pidDrive.driveDistanceTank(20,45,2.5, event);
-                            robot.pidDrive.driveDistanceTank(40, 135, 4, event);
-                        } else {
-                            robot.pidDrive.driveDistanceTank(37, 135, 4, event);
-                        }
+                        robot.pidDrive.driveDistanceTank(0,131,2,event);
 
                         sm.waitForEvent(event, State.DRIVE_TO_CRATER);
                         break;
                     case DRIVE_TO_CRATER:
                         event.reset();
 
-                        robot.pidDrive.driveDistanceTank( -90, 135, 2.5,event);
+                        robot.pidDrive.driveDistanceTank( 60, 130, 2.5,event);
 
                         sm.waitForEvent(event, State.END);
                         break;
