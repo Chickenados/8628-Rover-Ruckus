@@ -16,8 +16,10 @@ public class RobotV1Dropper{
 
     public void drop(CknEvent event) {
         dropperServo.setPosition(RobotV1Info.DROP_POSITION);
-        stopwatch = new CknStopwatch(event);
-        stopwatch.setTimer(1);
+        if(event != null) {
+            stopwatch = new CknStopwatch(event);
+            stopwatch.setTimer(1);
+        }
     }
 
     public void drop() {
@@ -26,8 +28,10 @@ public class RobotV1Dropper{
 
     public void reset(CknEvent event){
         dropperServo.setPosition(RobotV1Info.DROP_RESET_POSITION);
-        stopwatch = new CknStopwatch(event);
-        stopwatch.setTimer(1);
+        if(event != null) {
+            stopwatch = new CknStopwatch(event);
+            stopwatch.setTimer(1);
+        }
     }
 
     public void reset(){
