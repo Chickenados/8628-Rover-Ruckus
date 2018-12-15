@@ -1,6 +1,7 @@
 package chickenados.autocommands;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import chickenados.robotv1.RobotV1;
@@ -11,6 +12,7 @@ import chickenlib.CknTaskManager;
 import chickenlib.util.CknUtil;
 
 @Autonomous(name = "V1 Depot Oppo Crater")
+@Disabled
 public class V1RedDepotOtherCrater extends LinearOpMode{
 
     CknTaskManager mgr = new CknTaskManager();

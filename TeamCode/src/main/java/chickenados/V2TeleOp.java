@@ -52,6 +52,11 @@ public class V2TeleOp extends LinearOpMode{
                 grabber.setPower(0);
             }
 
+            if (gamepad1.y)
+                robot.dropper.drop();
+            else if (gamepad1.x)
+                robot.dropper.reset();
+
             mgr.executeTasks(CknTaskManager.TaskType.POSTCONTINUOUS);
         }
     }

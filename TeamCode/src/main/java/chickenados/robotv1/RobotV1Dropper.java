@@ -14,13 +14,13 @@ public class RobotV1Dropper{
         this.dropperServo = servo;
     }
 
-    public void drop(CknEvent event) throws InterruptedException{
+    public void drop(CknEvent event) {
         dropperServo.setPosition(RobotV1Info.DROP_POSITION);
         stopwatch = new CknStopwatch(event);
         stopwatch.setTimer(1);
     }
 
-    public void drop() throws InterruptedException{
+    public void drop() {
         drop(null);
     }
 

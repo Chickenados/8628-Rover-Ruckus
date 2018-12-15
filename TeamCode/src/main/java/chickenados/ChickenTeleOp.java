@@ -1,5 +1,6 @@
 package chickenados;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -17,6 +18,7 @@ import static chickenados.robotv1.RobotV1Info.LIFT_UP_SPEED;
 
 
 @TeleOp(name="ChickenTeleOp")
+@Disabled
 public class ChickenTeleOp extends LinearOpMode {
 
     // Declare OpMode members.

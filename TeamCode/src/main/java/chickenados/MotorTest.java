@@ -1,10 +1,12 @@
 package chickenados;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 @TeleOp(name = "Motor Test")
+@Disabled
 public class MotorTest extends LinearOpMode{
 
     DcMotor motor1;

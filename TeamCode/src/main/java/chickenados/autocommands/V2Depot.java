@@ -166,7 +166,7 @@ public class V2Depot extends LinearOpMode{
                             if(goldState == RobotV1VisionAnalyzer.GoldState.LEFT){
                                 robot.pidDrive.driveDistanceTank(20, angleToMaintain, 1.5, event);
                             } else {
-                                robot.pidDrive.driveDistanceTank(27, angleToMaintain, 2, event);
+                                robot.pidDrive.driveDistanceTank(20, angleToMaintain, 1.5, event);
                             }
                         }
 
