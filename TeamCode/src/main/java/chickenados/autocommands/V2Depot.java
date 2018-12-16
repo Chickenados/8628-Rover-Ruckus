@@ -196,14 +196,14 @@ public class V2Depot extends LinearOpMode{
                     case LINE_UP_FOR_CRATER:
                         event.reset();
 
-                        robot.pidDrive.driveDistanceTank(0,131,2,event);
+                        robot.pidDrive.driveDistanceTank(0,125,2,event);
 
                         sm.waitForEvent(event, State.DRIVE_TO_CRATER);
                         break;
                     case DRIVE_TO_CRATER:
                         event.reset();
 
-                        robot.pidDrive.driveDistanceTank( 60, 130, 2.5,event);
+                        robot.pidDrive.driveDistanceTank( 70, 123, 2.5,event);
 
                         sm.waitForEvent(event, State.END);
                         break;
