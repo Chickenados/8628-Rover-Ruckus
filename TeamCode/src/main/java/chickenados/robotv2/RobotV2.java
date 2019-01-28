@@ -69,9 +69,6 @@ public class RobotV2 extends CknRobot {
 
     //Subsystems
     public RobotV1Lift lift;
-    public RobotV1Grabber grabber;
-    public RobotV1Dropper dropper;
-    public RobotV1Collector collector;
     public RobotV1VisionAnalyzer analyzer = new RobotV1VisionAnalyzer(LABEL_GOLD_MINERAL);
 
     public RobotV2(HardwareMap hwMap, Telemetry telemetry){
