@@ -207,26 +207,14 @@ public class RobotV2 extends CknRobot {
         // Lift Subsystems
         //
 
-        CknPIDController.Parameters liftParams = new CknPIDController.Parameters();
+        /*CknPIDController.Parameters liftParams = new CknPIDController.Parameters();
         liftParams.allowOscillation = false;
         liftParams.useWraparound = false;
 
         liftPid = new CknPIDController(new CknPIDController.PIDCoefficients(RobotV2Info.LIFT_PID_P,
                 RobotV2Info.LIFT_PID_I, RobotV2Info.LIFT_PID_D),
                 new CknEncoderInputStream(liftMotor), liftParams);
-        lift = new RobotV1Lift(liftMotor, liftPid);
-
-        //
-        // Grabber subsystem
-        //
-
-        grabber = new RobotV1Grabber(hwMap.get(CRServo.class, "grabber"));
-
-        //
-        // Dropper Subsystem
-        //
-        dropperServo = hwMap.get(Servo.class, RobotV2Info.DROPPER_NAME);
-        dropper = new RobotV1Dropper(dropperServo);
+        lift = new RobotV1Lift(liftMotor, liftPid);*/
     }
 
     private void initVuforia(){
