@@ -100,7 +100,7 @@ public class V2Crater extends LinearOpMode{
                     case RELEASE_GRABBER:
                         event.reset();
 
-                        robot.grabber.release(event);
+                        //robot.grabber.release(event);
 
                         sm.waitForEvent(event, State.DRIVE_FROM_GRABBER);
                         break;
