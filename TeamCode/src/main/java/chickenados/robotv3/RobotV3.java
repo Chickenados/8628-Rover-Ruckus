@@ -56,6 +56,8 @@ public class RobotV3 extends CknRobot {
     public DcMotor xrailMotor;
     public DcMotor spinnerMotor;
 
+    public CRServo LCollectorPivot;
+    public CRServo RCollectorPivot;
 
     Servo dropperServo;
     CRServo collectorServo;
@@ -74,8 +76,6 @@ public class RobotV3 extends CknRobot {
     //Subsystems
     public RobotV1Lift lift;
     public RobotV1Grabber grabber;
-    public RobotV1Dropper dropper;
-    public RobotV1Collector collector;
     public RobotV1VisionAnalyzer analyzer = new RobotV1VisionAnalyzer(LABEL_GOLD_MINERAL);
 
     public RobotV3(HardwareMap hwMap, Telemetry telemetry){
@@ -148,6 +148,9 @@ public class RobotV3 extends CknRobot {
         xrailMotor = hwMap.dcMotor.get(RobotV3Info.XRAIL_MOTOR_NAME);
         xrailMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         xrailMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        RCollectorPivot = hwMap.get(CRServo.class, "collector1");
+        LCollectorPivot = hwMap.get(CRServo.class, "collector2");
 
 
         // Reverse Motors
@@ -240,13 +243,6 @@ public class RobotV3 extends CknRobot {
         //
 
         grabber = new RobotV1Grabber(hwMap.get(CRServo.class, "grabber"));
-
-        //
-        // Dropper Subsystem
-        //
-        dropperServo = hwMap.get(Servo.class, RobotV3Info.DROPPER_NAME);
-        dropper = new RobotV1Dropper(dropperServo);
-
 
     }
 
