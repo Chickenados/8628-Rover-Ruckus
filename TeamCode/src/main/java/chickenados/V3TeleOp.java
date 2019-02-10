@@ -73,9 +73,9 @@ public class V3TeleOp extends LinearOpMode{
                 robot.liftMotor.setPower(0);
             }
 
-            if (gamepad2.right_bumper) {
+            if (gamepad2.left_bumper || gamepad1.left_bumper) {
                 robot.spinnerMotor.setPower(-1);
-            } else if (gamepad2.left_bumper) {
+            } else if (gamepad2.right_bumper || gamepad1.right_bumper) {
                 robot.spinnerMotor.setPower(1);
             } else {
                 robot.spinnerMotor.setPower(0);
@@ -96,30 +96,24 @@ public class V3TeleOp extends LinearOpMode{
             } else {
                 grabber.setPower(0);
             }
-            if(gamepad1.a){
+            /*if(gamepad1.a){
                 grabber.setPower(1);
             } else if(gamepad1.b){
                 grabber.setPower(-1);
             } else {
                 grabber.setPower(0);
-            }
+            }*/
 
             robot.sliderMotor.setPower(gamepad1.left_stick_y);
 
 
             robot.xrailMotor.setPower(-gamepad1.right_stick_y);
-            if(gamepad1.dpad_up) scorer.setPower(1);
-            else if(gamepad1.dpad_down) scorer.setPower(-1);
+            if(gamepad1.dpad_down) scorer.setPower(1);
+            else if(gamepad1.dpad_up) scorer.setPower(-1);
             else scorer.setPower(0);
 
 
-            if (gamepad1.right_bumper) {
-                robot.spinnerMotor.setPower(-1);
-            } else if (gamepad1.left_bumper) {
-                robot.spinnerMotor.setPower(1);
-            } else {
-                robot.spinnerMotor.setPower(0);
-            }
+
 
             mgr.executeTasks(CknTaskManager.TaskType.POSTCONTINUOUS);
         }

@@ -140,10 +140,12 @@ public class RobotV3 extends CknRobot {
         sliderMotor = hwMap.dcMotor.get(RobotV3Info.SLIDER_MOTOR_NAME);
         sliderMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         sliderMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        sliderMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         spinnerMotor = hwMap.dcMotor.get(RobotV3Info.SPINNER_MOTOR_NAME);
         spinnerMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         spinnerMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        spinnerMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         xrailMotor = hwMap.dcMotor.get(RobotV3Info.XRAIL_MOTOR_NAME);
         xrailMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);

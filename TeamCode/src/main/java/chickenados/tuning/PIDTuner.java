@@ -7,6 +7,7 @@ import chickenados.robotv1.RobotV1;
 import chickenados.robotv1.RobotV1Info;
 import chickenados.robotv2.RobotV2;
 import chickenados.robotv2.RobotV2Info;
+import chickenados.robotv3.RobotV3;
 import chickenlib.CknTaskManager;
 import chickenlib.util.CknEvent;
 import chickenlib.CknPIDController;
@@ -23,7 +24,7 @@ public class PIDTuner extends LinearOpMode {
 
     private static final int ROUND_PLACES = 6;
 
-    RobotV2 robot;
+    RobotV3 robot;
     CknStateMachine<State> sm = new CknStateMachine<>();
     CknEvent event = new CknEvent();
     State currState;
@@ -57,7 +58,7 @@ public class PIDTuner extends LinearOpMode {
     @Override
     public void runOpMode(){
 
-        robot = new RobotV2(hardwareMap, telemetry);
+        robot = new RobotV3(hardwareMap, telemetry);
 
         waitForStart();
 

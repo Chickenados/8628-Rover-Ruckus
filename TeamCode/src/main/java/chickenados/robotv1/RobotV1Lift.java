@@ -3,6 +3,7 @@ package chickenados.robotv1;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
 
+import chickenados.robotv3.RobotV3Info;
 import chickenlib.util.CknEvent;
 import chickenlib.CknPIDController;
 import chickenlib.CknTaskManager;
@@ -42,7 +43,7 @@ public class RobotV1Lift implements CknTaskManager.Task{
     public void raiseLift(CknEvent event, double timeout){
         this.timeout = timeout;
         startTime = CknUtil.getCurrentTime();
-        liftPid.setSetPoint(RobotV1Info.RAISED_ENCODER_COUNT, false);
+        liftPid.setSetPoint(RobotV3Info.RAISED_ENCODER_COUNT, false);
         currentState = LiftState.UNKNOWN;
         targetState = LiftState.RAISED;
         this.event = event;
@@ -60,7 +61,7 @@ public class RobotV1Lift implements CknTaskManager.Task{
     public void lowerLift(CknEvent event, double timeout){
         startTime = CknUtil.getCurrentTime();
         this.timeout = timeout;
-        liftPid.setSetPoint(RobotV1Info.LOWERED_ENCODER_COUNT, false);
+        liftPid.setSetPoint(RobotV3Info.LOWERED_ENCODER_COUNT, false);
         currentState = LiftState.UNKNOWN;
         targetState = LiftState.LOWERED;
         this.event = event;

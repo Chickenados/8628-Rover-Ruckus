@@ -20,6 +20,7 @@ public class V3Depot extends LinearOpMode{
         SCAN_MINERALS,
         LOWER_LIFT,
         RELEASE_GRABBER,
+        TURN_TO_SCORE,
         MOVE_FROM_HOOK,
         TURN_TO_MINERAL,
         DRIVE_TO_MINERAL,
@@ -106,6 +107,13 @@ public class V3Depot extends LinearOpMode{
 
                         robot.grabber.release(event);
 
+                        sm.waitForEvent(event, State.TURN_TO_SCORE);
+                        break;
+                    case TURN_TO_SCORE:
+                        event.reset();
+
+                        robot.pidDrive.driveDistanceTank(1, 0, 1.75, event);
+
                         // If we didn't pick up the gold pos, just drive through the center one.
                         if(goldState == RobotV1VisionAnalyzer.GoldState.UNKNOWN
                                 || goldState == RobotV1VisionAnalyzer.GoldState.CENTER){
@@ -161,25 +169,25 @@ public class V3Depot extends LinearOpMode{
 
                         if(goldState == RobotV1VisionAnalyzer.GoldState.UNKNOWN
                                 || goldState == RobotV1VisionAnalyzer.GoldState.CENTER) {
-                            robot.pidDrive.driveDistanceTank(38, 0, 1.75, event);
+                            robot.pidDrive.driveDistanceTank(30, 0, 1.75, event);
                         } else {
                             angleToMaintain = robot.locationTracker.getLocation().heading;
                             if(goldState == RobotV1VisionAnalyzer.GoldState.LEFT){
-                                robot.pidDrive.driveDistanceTank(20, angleToMaintain, 1.5, event);
+                                robot.pidDrive.driveDistanceTank(15, angleToMaintain, 1.5, event);
                             } else {
-                                robot.pidDrive.driveDistanceTank(20, angleToMaintain, 1.5, event);
+                                robot.pidDrive.driveDistanceTank(15, angleToMaintain, 1.5, event);
                             }
                         }
 
-                        sm.waitForEvent(event, State.TURN_TO_DROP);
-                        break;
-                    case TURN_TO_DROP:
-                        event.reset();
-
-                        robot.pidDrive.driveDistanceTank(0, 90, 2.5, event);
-
                         sm.waitForEvent(event, State.DROP_MARKER);
                         break;
+                    /*case TURN_TO_DROP:
+                        event.reset();
+
+                        //robot.pidDrive.driveDistanceTank(0, 90, 2.5, event);
+
+                        sm.waitForEvent(event, State.DROP_MARKER);
+                        break;*/
                     case DROP_MARKER:
                         event.reset();
 
