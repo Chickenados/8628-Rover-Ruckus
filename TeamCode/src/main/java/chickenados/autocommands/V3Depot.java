@@ -2,6 +2,7 @@ package chickenados.autocommands;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.CRServo;
 
 import chickenados.robotv1.RobotV1;
 import chickenados.robotv1.RobotV1VisionAnalyzer;
@@ -20,6 +21,7 @@ public class V3Depot extends LinearOpMode{
         SCAN_MINERALS,
         LOWER_LIFT,
         RELEASE_GRABBER,
+        TURN_TO_ORIGIN,
         TURN_TO_SCORE,
         MOVE_FROM_HOOK,
         TURN_TO_MINERAL,
@@ -58,6 +60,7 @@ public class V3Depot extends LinearOpMode{
     @Override
     public void runOpMode() throws InterruptedException{
         robot = new RobotV3(hardwareMap, telemetry, false, true);
+
 
         if(DO_SCAN_MINERALS){
             robot.activateVision();
@@ -98,7 +101,7 @@ public class V3Depot extends LinearOpMode{
                     case LOWER_LIFT:
                         event.reset();
 
-                        robot.lift.raiseLift(event,5);
+                        robot.lift.raiseLift(event,4.5);
 
                         sm.waitForEvent(event, State.RELEASE_GRABBER);
                         break;
@@ -107,7 +110,14 @@ public class V3Depot extends LinearOpMode{
 
                         robot.grabber.release(event);
 
-                        sm.waitForEvent(event, State.TURN_TO_SCORE);
+                        sm.waitForEvent(event, State.TURN_TO_ORIGIN);
+                        break;
+                    case TURN_TO_ORIGIN:
+                        event.reset();
+
+                        robot.pidDrive.driveDistanceTank(0,0,2,event);
+
+                        sm.waitForEvent(event,State.TURN_TO_SCORE);
                         break;
                     case TURN_TO_SCORE:
                         event.reset();

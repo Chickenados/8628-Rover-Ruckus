@@ -46,7 +46,7 @@ public class RobotV3Info {
     //
 
     //TODO: Find these values
-    public static final int RAISED_ENCODER_COUNT = 15500;
+    public static final int RAISED_ENCODER_COUNT = 14500;
     public static final int LOWERED_ENCODER_COUNT = 0;
 
     public static final double LIFT_UP_SPEED = 1;
