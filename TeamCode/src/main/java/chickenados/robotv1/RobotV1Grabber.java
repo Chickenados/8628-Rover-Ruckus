@@ -19,7 +19,7 @@ public class RobotV1Grabber {
      */
     public void release(CknEvent event) throws InterruptedException{
         grabber.setPower(-1);
-        Thread.sleep(6000);
+        Thread.sleep(5000);
         grabber.setPower(0);
         if(event != null) event.set(true);
     }

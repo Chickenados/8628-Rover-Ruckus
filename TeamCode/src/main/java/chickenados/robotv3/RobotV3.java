@@ -77,6 +77,7 @@ public class RobotV3 extends CknRobot {
     public RobotV1Lift lift;
     public RobotV1Grabber grabber;
     public RobotV1VisionAnalyzer analyzer = new RobotV1VisionAnalyzer(LABEL_GOLD_MINERAL);
+    public RobotV3MarkerScorer collectorBox;
 
     public RobotV3(HardwareMap hwMap, Telemetry telemetry){
         this(hwMap, telemetry, false, false);
@@ -153,6 +154,7 @@ public class RobotV3 extends CknRobot {
 
         RCollectorPivot = hwMap.get(CRServo.class, "collector1");
         LCollectorPivot = hwMap.get(CRServo.class, "collector2");
+        LCollectorPivot.setDirection(DcMotorSimple.Direction.REVERSE);
 
 
         // Reverse Motors
@@ -238,6 +240,15 @@ public class RobotV3 extends CknRobot {
                 new CknEncoderInputStream(liftMotor), liftParams);
         lift = new RobotV1Lift(liftMotor, liftPid);
 
+        //
+        // Collector Box Subsystem
+        //
+        RobotV3MarkerScorer.Parameters boxParams = new RobotV3MarkerScorer.Parameters();
+        boxParams.retractTime = RobotV3Info.retractTime;
+        boxParams.extendTime = RobotV3Info.extendTime;
+
+
+        collectorBox = new RobotV3MarkerScorer(boxParams, LCollectorPivot, RCollectorPivot);
 
 
         //

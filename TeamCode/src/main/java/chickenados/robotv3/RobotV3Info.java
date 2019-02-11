@@ -34,7 +34,7 @@ public class RobotV3Info {
 
     //kU value (steady oscillation)
     // public static final double TURN_PID_P = 0.2;
-    public static final double TURN_PID_P = 0.014;
+    public static final double TURN_PID_P = 0.015;
     public static final double TURN_PID_I = 0.0;
     public static final double TURN_PID_D = 0.0;
 
@@ -66,6 +66,11 @@ public class RobotV3Info {
     public static final int DROP_RESET_POSITION = 0;
     public static final String GRABBER_NAME = "grabber";
     public static final String COLLECTOR_NAME = "collector";
+
+    // Collector Box Constants
+    public static final double extendTime = 0.75;
+    public static final double retractTime = 0.75;
+
 
 
     // Webcam

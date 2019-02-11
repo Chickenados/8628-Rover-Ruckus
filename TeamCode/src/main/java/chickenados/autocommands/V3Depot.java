@@ -115,7 +115,7 @@ public class V3Depot extends LinearOpMode{
                     case TURN_TO_ORIGIN:
                         event.reset();
 
-                        robot.pidDrive.driveDistanceTank(0,0,2,event);
+                        robot.pidDrive.driveDistanceTank(0,0,3,event);
 
                         sm.waitForEvent(event,State.TURN_TO_SCORE);
                         break;
@@ -179,7 +179,7 @@ public class V3Depot extends LinearOpMode{
 
                         if(goldState == RobotV1VisionAnalyzer.GoldState.UNKNOWN
                                 || goldState == RobotV1VisionAnalyzer.GoldState.CENTER) {
-                            robot.pidDrive.driveDistanceTank(30, 0, 1.75, event);
+                            robot.pidDrive.driveDistanceTank(17, 0, 2.5, event);
                         } else {
                             angleToMaintain = robot.locationTracker.getLocation().heading;
                             if(goldState == RobotV1VisionAnalyzer.GoldState.LEFT){
@@ -201,14 +201,14 @@ public class V3Depot extends LinearOpMode{
                     case DROP_MARKER:
                         event.reset();
 
-                        //TODO: DROP THE MARKER
-
+                        robot.collectorBox.extend(event);
 
                         sm.waitForEvent(event, State.RESET_SERVO);
                         break;
                     case RESET_SERVO:
                         event.reset();
 
+                        robot.collectorBox.reset(event);
 
                         sm.waitForEvent(event, State.LINE_UP_FOR_CRATER);
                         break;

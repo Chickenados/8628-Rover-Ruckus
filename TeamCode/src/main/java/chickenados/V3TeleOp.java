@@ -61,13 +61,25 @@ public class V3TeleOp extends LinearOpMode{
                 collector2.setPosition(collectorRot + 180.0);
             }*/
 
-            collector1.setPower(gamepad1.left_stick_x);
-            collector2.setPower(gamepad1.left_stick_x);
+            if(gamepad1.left_trigger > 0.0){
+                collector1.setPower(1);
+                collector2.setPower(1);
+            } else if(gamepad1.right_trigger > 0.0){
+                collector1.setPower(-1);
+                collector2.setPower(-1);
+            } else if(gamepad1.back){
+                collector1.setPower(-.08);
+                collector2.setPower(-.08);
+            } else {
+                collector1.setPower(0);
+                collector2.setPower(0);
+            }
 
 
-            if(gamepad2.x){
+
+            if(gamepad1.right_trigger > 0.0){
                 robot.liftMotor.setPower(-1);
-            } else if (gamepad2.y){
+            } else if (gamepad1.left_trigger > 0.0){
                 robot.liftMotor.setPower(1);
             } else {
                 robot.liftMotor.setPower(0);
@@ -86,25 +98,19 @@ public class V3TeleOp extends LinearOpMode{
             } else if (gamepad2.left_trigger > 0.0) {
                 robot.sliderMotor.setPower(1);
             } else {
-                robot.sliderMotor.setPower(0);
+                robot.sliderMotor.setPower(gamepad1.left_stick_y);
             }
 
-            if(gamepad2.a){
+            if(gamepad1.a || gamepad2.a){
                 grabber.setPower(1);
-            } else if(gamepad2.b){
+            } else if(gamepad1.b || gamepad2.b){
                 grabber.setPower(-1);
             } else {
                 grabber.setPower(0);
             }
-            /*if(gamepad1.a){
-                grabber.setPower(1);
-            } else if(gamepad1.b){
-                grabber.setPower(-1);
-            } else {
-                grabber.setPower(0);
-            }*/
 
-            robot.sliderMotor.setPower(gamepad1.left_stick_y);
+
+
 
 
             robot.xrailMotor.setPower(-gamepad1.right_stick_y);
@@ -112,7 +118,11 @@ public class V3TeleOp extends LinearOpMode{
             else if(gamepad1.dpad_up) scorer.setPower(-1);
             else scorer.setPower(0);
 
-
+            if(gamepad2.right_stick_button || gamepad2.left_stick_button){
+                robot.driveBase.setSpeed(0.5);
+            } else {
+                robot.driveBase.setSpeed(1);
+            }
 
 
             mgr.executeTasks(CknTaskManager.TaskType.POSTCONTINUOUS);
