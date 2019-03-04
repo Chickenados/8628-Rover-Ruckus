@@ -61,15 +61,23 @@ public class V3TeleOp extends LinearOpMode{
                 collector2.setPosition(collectorRot + 180.0);
             }*/
 
-            if(gamepad1.left_trigger > 0.0){
+            if(gamepad2.x){
                 collector1.setPower(1);
                 collector2.setPower(1);
-            } else if(gamepad1.right_trigger > 0.0){
+            } else if(gamepad2.y){
                 collector1.setPower(-1);
                 collector2.setPower(-1);
-            } else if(gamepad1.back){
-                collector1.setPower(-.08);
-                collector2.setPower(-.08);
+            } else {
+                collector1.setPower(0);
+                collector2.setPower(0);
+            }
+
+            if(gamepad1.right_trigger > 0.0){
+                collector1.setPower(1);
+                collector2.setPower(1);
+            } else if(gamepad1.left_trigger > 0.0){
+                collector1.setPower(-1);
+                collector2.setPower(-1);
             } else {
                 collector1.setPower(0);
                 collector2.setPower(0);
@@ -77,9 +85,9 @@ public class V3TeleOp extends LinearOpMode{
 
 
 
-            if(gamepad1.right_trigger > 0.0){
+            if(gamepad1.x){
                 robot.liftMotor.setPower(-1);
-            } else if (gamepad1.left_trigger > 0.0){
+            } else if (gamepad1.y){
                 robot.liftMotor.setPower(1);
             } else {
                 robot.liftMotor.setPower(0);
@@ -97,9 +105,13 @@ public class V3TeleOp extends LinearOpMode{
                 robot.sliderMotor.setPower(-1);
             } else if (gamepad2.left_trigger > 0.0) {
                 robot.sliderMotor.setPower(1);
-            } else {
+            } else if (gamepad2.right_trigger == 0 && gamepad2.left_trigger == 0){
                 robot.sliderMotor.setPower(gamepad1.left_stick_y);
+            } else {
+                robot.sliderMotor.setPower(0);
             }
+
+
 
             if(gamepad1.a || gamepad2.a){
                 grabber.setPower(1);
@@ -114,9 +126,15 @@ public class V3TeleOp extends LinearOpMode{
 
 
             robot.xrailMotor.setPower(-gamepad1.right_stick_y);
-            if(gamepad1.dpad_down) scorer.setPower(1);
-            else if(gamepad1.dpad_up) scorer.setPower(-1);
-            else scorer.setPower(0);
+            if(gamepad1.dpad_down || gamepad2.dpad_down){
+                scorer.setPower(1);
+            } else if(gamepad1.dpad_up || gamepad2.dpad_up) {
+                scorer.setPower(-1);
+            } else {
+                scorer.setPower(0);
+            }
+
+
 
             if(gamepad2.right_stick_button || gamepad2.left_stick_button){
                 robot.driveBase.setSpeed(0.5);

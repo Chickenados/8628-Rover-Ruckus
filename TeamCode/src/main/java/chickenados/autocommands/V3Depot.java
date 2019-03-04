@@ -23,7 +23,6 @@ public class V3Depot extends LinearOpMode{
         RELEASE_GRABBER,
         TURN_TO_ORIGIN,
         TURN_TO_SCORE,
-        MOVE_FROM_HOOK,
         TURN_TO_MINERAL,
         DRIVE_TO_MINERAL,
         TURN_TO_DEPOT,
@@ -32,6 +31,9 @@ public class V3Depot extends LinearOpMode{
         DROP_MARKER,
         RESET_SERVO,
         LINE_UP_FOR_CRATER,
+        RAISE_XRAIL,
+        SCORE_MARKER,
+        RESET_MARKER,
         DRIVE_TO_CRATER,
         END;
     }
@@ -115,14 +117,14 @@ public class V3Depot extends LinearOpMode{
                     case TURN_TO_ORIGIN:
                         event.reset();
 
-                        robot.pidDrive.driveDistanceTank(0,0,3,event);
+                        robot.pidDrive.driveDistanceTank(0,0,1,event);
 
                         sm.waitForEvent(event,State.TURN_TO_SCORE);
                         break;
                     case TURN_TO_SCORE:
                         event.reset();
 
-                        robot.pidDrive.driveDistanceTank(1, 0, 1.75, event);
+                        robot.pidDrive.driveDistanceTank(3, 0, 1.75, event);
 
                         // If we didn't pick up the gold pos, just drive through the center one.
                         if(goldState == RobotV1VisionAnalyzer.GoldState.UNKNOWN
@@ -130,16 +132,9 @@ public class V3Depot extends LinearOpMode{
 
                             sm.waitForEvent(event, State.DRIVE_TO_DEPOT);
                         } else {
-                            sm.waitForEvent(event, State.MOVE_FROM_HOOK);
+                            sm.waitForEvent(event, State.TURN_TO_MINERAL);
                         }
 
-                        break;
-                    case MOVE_FROM_HOOK:
-                        event.reset();
-
-                        robot.pidDrive.driveDistanceTank(5, 0, 1, event);
-
-                        sm.waitForEvent(event, State.TURN_TO_MINERAL);
                         break;
                     case TURN_TO_MINERAL:
                         event.reset();
@@ -159,7 +154,7 @@ public class V3Depot extends LinearOpMode{
                         event.reset();
 
                         angleToMaintain = robot.locationTracker.getLocation().heading;
-                        robot.pidDrive.driveDistanceTank(23, angleToMaintain, 2, event);
+                        robot.pidDrive.driveDistanceTank(22, angleToMaintain, 2, event);
 
                         sm.waitForEvent(event, State.TURN_TO_DEPOT);
                         break;
@@ -183,13 +178,13 @@ public class V3Depot extends LinearOpMode{
                         } else {
                             angleToMaintain = robot.locationTracker.getLocation().heading;
                             if(goldState == RobotV1VisionAnalyzer.GoldState.LEFT){
-                                robot.pidDrive.driveDistanceTank(15, angleToMaintain, 1.5, event);
+                                robot.pidDrive.driveDistanceTank(14, angleToMaintain, 1.5, event);
                             } else {
-                                robot.pidDrive.driveDistanceTank(15, angleToMaintain, 1.5, event);
+                                robot.pidDrive.driveDistanceTank(14, angleToMaintain, 1.5, event);
                             }
                         }
 
-                        sm.waitForEvent(event, State.DROP_MARKER);
+                        sm.waitForEvent(event, State.LINE_UP_FOR_CRATER);
                         break;
                     /*case TURN_TO_DROP:
                         event.reset();
@@ -198,7 +193,7 @@ public class V3Depot extends LinearOpMode{
 
                         sm.waitForEvent(event, State.DROP_MARKER);
                         break;*/
-                    case DROP_MARKER:
+                   /* case DROP_MARKER:
                         event.reset();
 
                         robot.collectorBox.extend(event);
@@ -211,13 +206,34 @@ public class V3Depot extends LinearOpMode{
                         robot.collectorBox.reset(event);
 
                         sm.waitForEvent(event, State.LINE_UP_FOR_CRATER);
-                        break;
+                        break; */
                     case LINE_UP_FOR_CRATER:
                         event.reset();
 
                         robot.pidDrive.driveDistanceTank(0,125,2,event);
 
-                        sm.waitForEvent(event, State.DRIVE_TO_CRATER);
+                        sm.waitForEvent(event, State.RAISE_XRAIL);
+                        break;
+                    case RAISE_XRAIL:
+                        event.reset();
+
+                        robot.xRail.extend(event);
+
+                        sm.waitForEvent(event, State.SCORE_MARKER);
+                        break;
+                    case SCORE_MARKER:
+                        event.reset();
+
+                        robot.collectorBox.extend(event);
+
+                        sm.waitForEvent(event, State.RESET_MARKER);
+                        break;
+                    case RESET_MARKER:
+                        event.reset();
+
+                        robot.collectorBox.reset(event);
+
+                        sm.waitForEvent(event,State.DRIVE_TO_CRATER);
                         break;
                     case DRIVE_TO_CRATER:
                         event.reset();

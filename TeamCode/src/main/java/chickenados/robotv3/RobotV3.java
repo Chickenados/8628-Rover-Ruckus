@@ -52,12 +52,15 @@ public class RobotV3 extends CknRobot {
     public DcMotor pivotMotor;
     public DcMotor reachMotor;
 
+
     public DcMotor sliderMotor;
     public DcMotor xrailMotor;
     public DcMotor spinnerMotor;
 
     public CRServo LCollectorPivot;
     public CRServo RCollectorPivot;
+
+    public DcMotor XRailAuto;
 
     Servo dropperServo;
     CRServo collectorServo;
@@ -78,6 +81,7 @@ public class RobotV3 extends CknRobot {
     public RobotV1Grabber grabber;
     public RobotV1VisionAnalyzer analyzer = new RobotV1VisionAnalyzer(LABEL_GOLD_MINERAL);
     public RobotV3MarkerScorer collectorBox;
+    public RobotV3XRail xRail;
 
     public RobotV3(HardwareMap hwMap, Telemetry telemetry){
         this(hwMap, telemetry, false, false);
@@ -152,9 +156,10 @@ public class RobotV3 extends CknRobot {
         xrailMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         xrailMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        RCollectorPivot = hwMap.get(CRServo.class, "collector1");
-        LCollectorPivot = hwMap.get(CRServo.class, "collector2");
+
+        LCollectorPivot = hwMap.get(CRServo.class, "scorer");
         LCollectorPivot.setDirection(DcMotorSimple.Direction.REVERSE);
+        XRailAuto = hwMap.get(DcMotor.class, "xrail");
 
 
         // Reverse Motors
@@ -247,9 +252,13 @@ public class RobotV3 extends CknRobot {
         boxParams.retractTime = RobotV3Info.retractTime;
         boxParams.extendTime = RobotV3Info.extendTime;
 
+        RobotV3XRail.Parameters xrailParams = new RobotV3XRail.Parameters();
+        xrailParams.retractTime = RobotV3Info.xrailTimeRetract;
+        xrailParams.extendTime = RobotV3Info.xrailTimeExtend;
 
-        collectorBox = new RobotV3MarkerScorer(boxParams, LCollectorPivot, RCollectorPivot);
 
+        collectorBox = new RobotV3MarkerScorer(boxParams, LCollectorPivot);
+        xRail= new RobotV3XRail(xrailParams, XRailAuto);
 
         //
         // Grabber subsystem

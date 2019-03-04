@@ -71,6 +71,9 @@ public class RobotV3Info {
     public static final double extendTime = 0.75;
     public static final double retractTime = 0.75;
 
+    public static final double xrailTimeExtend = 0.75;
+    public static final double xrailTimeRetract = 0.75;
+
 
 
     // Webcam

@@ -1,6 +1,7 @@
 package chickenados.robotv3;
 
 import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import chickenlib.CknTaskManager;
@@ -8,9 +9,9 @@ import chickenlib.util.CknEvent;
 import chickenlib.util.CknStopwatch;
 import chickenlib.util.CknUtil;
 
-public class RobotV3MarkerScorer implements CknTaskManager.Task{
+public class RobotV3XRail implements CknTaskManager.Task{
 
-    private enum MarkerState{
+    private enum XRailState{
         EXTENDING,
         RETRACTING,
         NONE
@@ -25,11 +26,11 @@ public class RobotV3MarkerScorer implements CknTaskManager.Task{
 
     }
 
-    MarkerState state = MarkerState.NONE;
+    XRailState state = XRailState.NONE;
 
     Parameters params;
 
-    CRServo leftServo;
+    DcMotor xrail;
 
 
     private CknStopwatch stopwatch;
@@ -38,16 +39,16 @@ public class RobotV3MarkerScorer implements CknTaskManager.Task{
 
     private CknEvent event;
 
-    public RobotV3MarkerScorer(Parameters params, CRServo leftServo){
-        this.leftServo = leftServo;
+    public RobotV3XRail(Parameters params, DcMotor xrail){
+        this.xrail = xrail;
         this.params = params;
     }
 
     public void extend(CknEvent event) {
-        state = MarkerState.EXTENDING;
+        state = XRailState.EXTENDING;
         startTime = CknUtil.getCurrentTime();
         CknTaskManager.getInstance().registerTask(this, CknTaskManager.TaskType.PRECONTINUOUS);
-        this.leftServo.setPower(1);
+        this.xrail.setPower(1);
         if(event != null) {
             this.event = event;
         } else {
@@ -60,10 +61,10 @@ public class RobotV3MarkerScorer implements CknTaskManager.Task{
     }
 
     public void reset(CknEvent event){
-        state = MarkerState.RETRACTING;
+        state = XRailState.RETRACTING;
         startTime = CknUtil.getCurrentTime();
         CknTaskManager.getInstance().registerTask(this, CknTaskManager.TaskType.PRECONTINUOUS);
-        this.leftServo.setPower(-1);
+        this.xrail.setPower(-1);
         if(event != null) {
             this.event = event;
         } else {
@@ -76,20 +77,20 @@ public class RobotV3MarkerScorer implements CknTaskManager.Task{
     }
 
     private void stopServos(){
-        this.leftServo.setPower(0);
+        this.xrail.setPower(0);
         CknTaskManager.getInstance().unregisterTask(this, CknTaskManager.TaskType.PRECONTINUOUS);
     }
 
     @Override
     public void preContinuous(){
-        if(state == MarkerState.EXTENDING) {
+        if(state == XRailState.EXTENDING) {
             if (CknUtil.getCurrentTime() - startTime > params.extendTime) {
                 stopServos();
                 if(event != null){
                     event.set(true);
                 }
             }
-        } else if (state == MarkerState.RETRACTING){
+        } else if (state == XRailState.RETRACTING){
             if (CknUtil.getCurrentTime() - startTime > params.retractTime) {
                 stopServos();
                 if(event != null){
