@@ -18,7 +18,6 @@ import static chickenados.robotv1.RobotV1Info.LIFT_UP_SPEED;
 
 
 @TeleOp(name="ChickenTeleOp")
-@Disabled
 public class ChickenTeleOp extends LinearOpMode {
 
     // Declare OpMode members.

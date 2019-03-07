@@ -19,7 +19,7 @@ public class RobotV3XRail implements CknTaskManager.Task{
 
     public static class Parameters {
         // The time to extend the collector box, in seconds
-        public double extendTime = 4.0;
+        public double extendTime = 5.0;
 
         //The time to retract the collector box, in seconds
         public double retractTime = 2.0;

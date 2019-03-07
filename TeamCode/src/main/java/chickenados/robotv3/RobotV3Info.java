@@ -68,11 +68,11 @@ public class RobotV3Info {
     public static final String COLLECTOR_NAME = "collector";
 
     // Collector Box Constants
-    public static final double extendTime = 0.75;
-    public static final double retractTime = 0.75;
+    public static final double extendTime = 2.0;
+    public static final double retractTime = 2.0;
 
-    public static final double xrailTimeExtend = 0.75;
-    public static final double xrailTimeRetract = 0.75;
+    public static final double xrailTimeExtend = 2.0;
+    public static final double xrailTimeRetract = 2.0;
 
 
 

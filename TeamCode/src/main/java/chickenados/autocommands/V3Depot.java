@@ -43,7 +43,7 @@ public class V3Depot extends LinearOpMode{
     private final boolean DO_SCAN_MINERALS = true;
     private final int SCAN_TIMEOUT = 5;
 
-    private final double LEFT_MINERAL_ANGLE = 30;
+    private final double LEFT_MINERAL_ANGLE = 40;
     private final double RIGHT_MINERAL_ANGLE = -35;
 
     // END AUTONOMOUS CONSTANTS
@@ -154,14 +154,14 @@ public class V3Depot extends LinearOpMode{
                         event.reset();
 
                         angleToMaintain = robot.locationTracker.getLocation().heading;
-                        robot.pidDrive.driveDistanceTank(22, angleToMaintain, 2, event);
+                        robot.pidDrive.driveDistanceTank(17, angleToMaintain, 2, event);
 
                         sm.waitForEvent(event, State.TURN_TO_DEPOT);
                         break;
                     case TURN_TO_DEPOT:
                         event.reset();
 
-                        if(goldState == RobotV1VisionAnalyzer.GoldState.LEFT) angleToMaintain = -30;
+                        if(goldState == RobotV1VisionAnalyzer.GoldState.LEFT) angleToMaintain = -35;
                         if(goldState == RobotV1VisionAnalyzer.GoldState.RIGHT) angleToMaintain = 40;
 
                         robot.pidDrive.driveDistanceTank(0, angleToMaintain, 2, event);

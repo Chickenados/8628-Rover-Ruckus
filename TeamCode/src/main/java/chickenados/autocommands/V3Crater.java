@@ -43,7 +43,7 @@ public class V3Crater extends LinearOpMode{
     private final boolean DO_SCAN_MINERALS = true;
     private final int SCAN_TIMEOUT = 5;
 
-    private final double LEFT_MINERAL_ANGLE = 30;
+    private final double LEFT_MINERAL_ANGLE = 40;
     private final double CENTER_MINERAL_ANGLE = 30;
     private final double RIGHT_MINERAL_ANGLE = -35;
 
@@ -125,7 +125,7 @@ public class V3Crater extends LinearOpMode{
                     case TURN_TO_SCORE:
                         event.reset();
 
-                        robot.pidDrive.driveDistanceTank(3, 0, 1.75, event);
+                        robot.pidDrive.driveDistanceTank(3, 0, 1, event);
 
                         // If we didn't pick up the gold pos, just drive through the center one.
                         if(goldState == RobotV1VisionAnalyzer.GoldState.UNKNOWN
@@ -144,10 +144,10 @@ public class V3Crater extends LinearOpMode{
 
                         // Either turn towards left or right mineral.
                         if(goldState == RobotV1VisionAnalyzer.GoldState.LEFT){
-                            robot.pidDrive.driveDistanceTank(0, LEFT_MINERAL_ANGLE, 2, event);
+                            robot.pidDrive.driveDistanceTank(0, LEFT_MINERAL_ANGLE, 1, event);
                             angleToMaintain = LEFT_MINERAL_ANGLE;
                         } else {
-                            robot.pidDrive.driveDistanceTank(0, RIGHT_MINERAL_ANGLE, 2, event);
+                            robot.pidDrive.driveDistanceTank(0, RIGHT_MINERAL_ANGLE, 1, event);
                             angleToMaintain = RIGHT_MINERAL_ANGLE;
                         }
 
@@ -157,14 +157,14 @@ public class V3Crater extends LinearOpMode{
                         event.reset();
 
                         angleToMaintain = robot.locationTracker.getLocation().heading;
-                        robot.pidDrive.driveDistanceTank(12, angleToMaintain, 2, event);
+                        robot.pidDrive.driveDistanceTank(8, angleToMaintain, 2, event);
 
                         sm.waitForEvent(event, State.BACK_OUT);
                         break;
                     case BACK_OUT:
                         event.reset();
 
-                        robot.pidDrive.driveDistanceTank(-10,angleToMaintain,2,event);
+                        robot.pidDrive.driveDistanceTank(-6,angleToMaintain,2,event);
 
                         sm.waitForEvent(event, State.TURN_TO_WALL);
                         break;
@@ -178,7 +178,7 @@ public class V3Crater extends LinearOpMode{
                     case DRIVE_TO_WALL:
                         event.reset();
 
-                        robot.pidDrive.driveDistanceTank(25,90,2,event);
+                        robot.pidDrive.driveDistanceTank(15,90,2,event);
 
                         sm.waitForEvent(event,State.TURN_TO_DEPOT);
                         break;
@@ -192,14 +192,14 @@ public class V3Crater extends LinearOpMode{
                     case DRIVE_TO_DEPOT:
                         event.reset();
 
-                        robot.pidDrive.driveDistanceTank(30,135,2,event);
+                        robot.pidDrive.driveDistanceTank(15,131,2,event);
 
                         sm.waitForEvent(event,State.TURN_AROUND);
                         break;
                     case TURN_AROUND:
                         event.reset();
 
-                        robot.pidDrive.driveDistanceTank(0,-45,2,event);
+                        robot.pidDrive.driveDistanceTank(0,-46,2,event);
 
                         sm.waitForEvent(event,State.RAISE_XRAIL);
                         break;
