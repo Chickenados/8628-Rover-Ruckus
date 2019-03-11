@@ -61,10 +61,10 @@ public class V3TeleOp extends LinearOpMode{
                 collector2.setPosition(collectorRot + 180.0);
             }*/
 
-            if(gamepad2.x){
+            if(gamepad2.x || gamepad1.right_trigger > 0.0){
                 collector1.setPower(1);
                 collector2.setPower(1);
-            } else if(gamepad2.y){
+            } else if(gamepad2.y || gamepad1.left_trigger > 0.0){
                 collector1.setPower(-1);
                 collector2.setPower(-1);
             } else {
@@ -72,7 +72,7 @@ public class V3TeleOp extends LinearOpMode{
                 collector2.setPower(0);
             }
 
-            if(gamepad1.right_trigger > 0.0){
+            /*if(gamepad1.right_trigger > 0.0){
                 collector1.setPower(1);
                 collector2.setPower(1);
             } else if(gamepad1.left_trigger > 0.0){
@@ -81,7 +81,7 @@ public class V3TeleOp extends LinearOpMode{
             } else {
                 collector1.setPower(0);
                 collector2.setPower(0);
-            }
+            }*/
 
 
 
