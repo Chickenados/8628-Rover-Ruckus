@@ -27,7 +27,12 @@ public class V3TeleOp extends LinearOpMode{
         CRServo collector1 = hardwareMap.get(CRServo.class, "collector1");
         CRServo collector2 = hardwareMap.get(CRServo.class, "collector2");
         collector2.setDirection(DcMotorSimple.Direction.REVERSE);
-        CRServo scorer = hardwareMap.get(CRServo.class, "scorer");
+        CRServo scorer = hardwareMap.get(CRServo.class, "scorer"); //names the scoring motor
+        //this is a change too
+
+        /*
+        so is this
+         */
 
         double previousPosition1 = 0.0;
         double previousPosition2= 180.0;
