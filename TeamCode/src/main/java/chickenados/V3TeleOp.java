@@ -90,10 +90,10 @@ public class V3TeleOp extends LinearOpMode{
 
 
 
-            if(gamepad1.x){
-                robot.liftMotor.setPower(-1);
-            } else if (gamepad1.y){
+            if(gamepad1.y){ //Switching the controls back to x moves up and y moves down
                 robot.liftMotor.setPower(1);
+            } else if (gamepad1.x){
+                robot.liftMotor.setPower(-1);
             } else {
                 robot.liftMotor.setPower(0);
             }
