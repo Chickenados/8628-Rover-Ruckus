@@ -27,7 +27,12 @@ public class V3TeleOp extends LinearOpMode{
         CRServo collector1 = hardwareMap.get(CRServo.class, "collector1");
         CRServo collector2 = hardwareMap.get(CRServo.class, "collector2");
         collector2.setDirection(DcMotorSimple.Direction.REVERSE);
-        CRServo scorer = hardwareMap.get(CRServo.class, "scorer");
+        CRServo scorer = hardwareMap.get(CRServo.class, "scorer"); //names the scoring motor
+        //this is a change too
+
+        /*
+        so is this
+         */
 
         double previousPosition1 = 0.0;
         double previousPosition2= 180.0;
@@ -85,10 +90,10 @@ public class V3TeleOp extends LinearOpMode{
 
 
 
-            if(gamepad1.x){
-                robot.liftMotor.setPower(-1);
-            } else if (gamepad1.y){
+            if(gamepad1.y){ //Switching the controls back to x moves up and y moves down
                 robot.liftMotor.setPower(1);
+            } else if (gamepad1.x){
+                robot.liftMotor.setPower(-1);
             } else {
                 robot.liftMotor.setPower(0);
             }
